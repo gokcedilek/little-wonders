@@ -1,0 +1,20 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  # local:
+  #   push: false #cannot have local and gcloudbuild at the same time!
+  googleCloudBuild: #update 1 to use gcloud build!
+    projectId: cool-snowfall-275901
+  artifacts:
+    - image: gcr.io/cool-snowfall-275901/auth #gokcedilek/s-e-auth #update 2
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

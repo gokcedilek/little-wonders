@@ -1,0 +1,17 @@
+#routing rules tied to nginx
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: social-events.dev #made up domain name that'll work on our local machine
+      http:
+        paths:
+          - path: /api/users/?(.*) #request to send to the auth service
+            backend:
+              serviceName: auth-srv
+              servicePort: 4000
