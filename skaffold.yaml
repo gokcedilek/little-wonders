@@ -9,7 +9,7 @@ build:
   #   push: false #cannot have local and gcloudbuild at the same time!
   googleCloudBuild: #update 1 to use gcloud build!
     projectId: cool-snowfall-275901
-  artifacts:
+  artifacts: #setup code syncing to pods running our images
     - image: gcr.io/cool-snowfall-275901/auth #gokcedilek/s-e-auth #update 2
       context: auth
       docker:
@@ -17,4 +17,12 @@ build:
       sync:
         manual:
           - src: 'src/**/*.ts'
+            dest: .
+    - image: gcr.io/cool-snowfall-275901/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
             dest: .

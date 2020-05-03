@@ -1,26 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: client-depl
 spec:
   replicas: 1 #number of pods (copies of the image) to run for the auth service
   selector: #tell the deployment how to find the pods it will create
     matchLabels:
-      app: auth
+      app: client
   template: #how to create each individual pod that this deployment will create
     metadata:
       labels: #this label matches up with the "matchLabels" in the "selector"
-        app: auth
+        app: client
     spec: #tell pod how to behave
       containers:
-        - name: auth #important for logging purposes
-          image: gcr.io/cool-snowfall-275901/auth #gokcedilek/s-e-auth
-          env: #setting up env variables we want to have access to in this container
-            - name: JWT_KEY
-              valueFrom: #value comes from the secret we created!!!
-                secretKeyRef:
-                  name: jwt-secret
-                  key: JWT_KEY #there can be many key-value pairs in a secret
+        - name: client #important for logging purposes
+          image: gcr.io/cool-snowfall-275901/client #gokcedilek/s-e-auth
 
 ---
 #config for our service
@@ -28,12 +22,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: client-srv
 spec: #tell the service how to behave
   selector: #tell the service how to find the pods that it should govern access to - all the pods with label "app: auth"
-    app: auth
+    app: client
   ports: #ports to expose on that pod
-    - name: auth
+    - name: client
       protocol: TCP
-      port: 4000
-      targetPort: 4000
+      port: 3000
+      targetPort: 3000

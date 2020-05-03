@@ -10,8 +10,12 @@ spec:
   rules:
     - host: social-events.dev #made up domain name that'll work on our local machine
       http:
-        paths:
-          - path: /api/users/?(.*) #request to send to the auth service
+        paths: #routing rules inside the cluster for incoming requests from the outside world
+          - path: /api/users/?(.*)
             backend:
               serviceName: auth-srv
               servicePort: 4000
+          - path: /?(.*) #catch all - any req path - must be listed the last!
+            backend:
+              serviceName: client-srv
+              servicePort: 3000
