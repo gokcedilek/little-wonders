@@ -26,3 +26,11 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
+    - image: gcr.io/cool-snowfall-275901/events
+      context: events
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

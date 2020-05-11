@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { BadRequestError } from '../errors/BadRequestError';
+import { BadRequestError } from '@gdsocialevents/common';
 import { User } from '../models/user';
 
 export const signupUser = async (

@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator'; //check the body of the request - apply it as a middleware!
 import jwt from 'jsonwebtoken';
-import { validateRequest } from '../middlewares/validate-request';
+import { validateRequest } from '@gdsocialevents/common';
 import { signupUser } from '../middlewares/signup-user';
 import { User } from '../models/user';
 
@@ -31,7 +31,7 @@ router.post(
 
     //generate the jwt
     const userJWT = jwt.sign(
-      { user_id: user.id, user_email: user.email },
+      { id: user.id, email: user.email },
       process.env.JWT_KEY!
     );
 

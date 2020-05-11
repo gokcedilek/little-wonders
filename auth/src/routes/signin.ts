@@ -1,11 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { body } from 'express-validator'; //check the body of the request - apply it as a middleware
 import jwt from 'jsonwebtoken';
-import { validateRequest } from '../middlewares/validate-request';
+import { validateRequest, BadRequestError } from '@gdsocialevents/common';
 import { signinUser } from '../middlewares/signin-user';
 import { User } from '../models/user';
 import { Password } from '../services/password';
-import { BadRequestError } from '../errors/BadRequestError';
 
 const router = express.Router();
 
@@ -39,7 +38,7 @@ router.post(
 
     //generate the jwt
     const userJWT = jwt.sign(
-      { user_id: existingUser!.id, user_email: existingUser!.email },
+      { id: existingUser!.id, email: existingUser!.email },
       process.env.JWT_KEY!
     );
 

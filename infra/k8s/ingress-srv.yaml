@@ -15,7 +15,11 @@ spec:
             backend:
               serviceName: auth-srv
               servicePort: 4000
-          - path: /?(.*) #catch all - any req path - must be listed the last!
+          - path: /api/events/?(.*)
+            backend:
+              serviceName: events-srv
+              servicePort: 4000
+          - path: /?(.*) #catch all route - any req path - must be listed the last!
             backend:
               serviceName: client-srv
               servicePort: 3000

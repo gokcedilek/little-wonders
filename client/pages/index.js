@@ -8,7 +8,9 @@ const LandingPage = ({ currentUser }) => {
   );
 };
 
+//fetch data to figure out who the current user is - ret val becomes props to the component itself!
 LandingPage.getInitialProps = async ({ req }) => {
+  console.log('landing page!');
   const axiosClient = buildClient({ req });
   const response = await axiosClient.get('/api/users/currentuser');
   return response.data;
