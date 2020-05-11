@@ -2,10 +2,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { requireAuth } from '@gdsocialevents/common';
 import { body } from 'express-validator';
-import { validateRequest } from '@gdsocialevents/common';
+import { validateRequest, NotFoundError } from '@gdsocialevents/common';
 import moment from 'moment';
 import { Client, Status } from '@googlemaps/google-maps-services-js';
-//import {GeoCodingService} from '../../GeoCodingService'
 import { Event } from '../models/event';
 
 const router = express.Router();
@@ -17,66 +16,64 @@ const userValidationRules = () => {
   ];
 };
 
-// USAGE
-// new GeoCodingService().geocodeAddress().then((results) => {
-//   console.log('results', results);
+const locationValidation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const client = new Client({});
 
-//   const result = response.json.results[0],
-//     location = result.geometry.location;
+  try {
+    let result = await client.geocode({
+      params: {
+        address: req.body.location,
+        key: 'AIzaSyAfPjiiFC9t-ixMAHY9tqf2YJw19TZ0w0k',
+      },
+      timeout: 10000,
+    });
+    console.log(result.data);
+    if (result.data.status === Status.OK) {
+      console.log(result.data.results[0].geometry.location);
+      return next();
+    } else {
+      console.log(result.data.status);
+      throw new NotFoundError();
+    }
+  } catch (err) {
+    return next(err);
+  }
+};
 
-//   // @types/googlemaps describe the Javascript API not the JSON object on the response
-//   // there a sublte difference like lat/lng beeing number not functions, making this `<any>` cast necessary
-//   resolve({
-//     lat: <any>location.lat,
-//     lng: <any>location.lng,
-//     address: result.formatted_address,
-//   });
-// });
-
-// const locationValidation = () => {
-//   const client = new Client({});
-//   let result = client.geocode({
-//     params: {
-//       address: '1600 Amphitheatre Parkway, Mountain View, CA',
-//       key: 'AIzaSyAfPjiiFC9t-ixMAHY9tqf2YJw19TZ0w0k',
-//     },
-//   });
-//   console.log(result);
-// };
-
-// router.get('/made/up', (req: Request, res: Response) => {
-//   locationValidation();
-//   res.send({});
-// });
-
-// const validate = (req: Request,
-//   res: Response,
-//   next: NextFunction) => {
-//   const {year, month, day, hour, min, a} = req.body
-//   try{
-//     if(!moment(`${year}-${month}-${day} ${hour}:${min} ${a}`,"YYYY-M-D LT", true).isValid()) {
-//       throw new Error()
-//     }
-//     next()
-//   } catch(err) {
-//     next(err);
-//   }
-// }
+const timeValidation = (req: Request, res: Response, next: NextFunction) => {
+  //time format: `${year}-${month}-${day} ${hour}:${min} ${a}`
+  const time = req.body.time;
+  console.log(`time: ${time}`);
+  if (moment(time, 'YYYY-M-D LT', true).isValid()) {
+    console.log('valid!');
+    return next();
+  } else {
+    console.log('nope!');
+    throw new NotFoundError();
+  }
+};
 
 router.post(
   '/api/events',
   requireAuth,
   userValidationRules(),
   validateRequest,
+  locationValidation,
+  timeValidation,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { title, description } = req.body;
+      const { title, description, location, time } = req.body;
       const event = Event.build({
         title,
         description,
         userId: req.currentUser!.id,
       });
       await event.save();
+      console.log(`arrived here with location: ${location} and time: ${time}`);
       res.status(201).send(event);
     } catch (err) {
       return next(err);
