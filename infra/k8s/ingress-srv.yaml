@@ -15,9 +15,13 @@ spec:
             backend:
               serviceName: auth-srv
               servicePort: 4000
-          - path: /api/events/?(.*)
+          - path: /api/posts/?(.*)
             backend:
-              serviceName: events-srv
+              serviceName: posts-srv
+              servicePort: 4000
+          - path: /api/joins/?(.*)
+            backend:
+              serviceName: joins-srv
               servicePort: 4000
           - path: /?(.*) #catch all route - any req path - must be listed the last!
             backend:
