@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gdsocialevents/common": "^1.0.21",
+    "@gdsocialevents/common": "^1.0.29",
     "@googlemaps/google-maps-services-js": "^2.6.0",
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-session": "^2.0.39",
@@ -32,6 +32,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.25.3",
     "mongoose": "^5.9.7",
+    "mongoose-update-if-current": "^1.4.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
   },

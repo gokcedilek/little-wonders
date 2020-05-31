@@ -11,6 +11,8 @@ import { Post } from '../models/post';
 import { User } from '../models/user';
 import { Join } from '../models/join';
 import { JoinStatus } from '@gdsocialevents/common/';
+import { JoinCreatedPublisher } from '../events/publishers/join-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
@@ -73,6 +75,17 @@ router.post(
       await join.save();
 
       //publish an event for the successful join
+      new JoinCreatedPublisher(natsWrapper.theClient).publish({
+        id: join.id,
+        status: join.status,
+        userId: user.id,
+        expiresAt: join.expAt.toISOString(),
+        post: {
+          id: post.id,
+          price: post.price,
+        },
+        version: join.version,
+      });
       res.status(201).send(join);
     } catch (err) {
       return next(err);

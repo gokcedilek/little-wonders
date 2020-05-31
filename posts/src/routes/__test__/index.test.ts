@@ -7,12 +7,14 @@ const createPost = async () => {
   const title = 'jgejkj';
   const description = 'keginveugh';
   const price = 20;
+  const numPeople = 1;
 
   //request to create a new event
   await request(app).post('/api/posts').set('Cookie', cookie).send({
     title,
     description,
     price,
+    numPeople,
   });
 };
 

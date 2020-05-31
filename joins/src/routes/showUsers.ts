@@ -5,7 +5,7 @@ import { requireAuth, NotFoundError } from '@gdsocialevents/common';
 
 const router = express.Router();
 
-//todo: ONLY THE OWNER OF THE EVENT CAN ACCESS? need to use post.ownerId
+//todo: ONLY THE OWNER OF THE EVENT CAN ACCESS? need to use post.ownerId OR can only access if you've signed up for this event?
 router.get(
   '/api/joins/:postId',
   requireAuth,

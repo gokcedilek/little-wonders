@@ -6,6 +6,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from '@gdsocialevents/common';
 import { PostUpdatedPublisher } from '../events/publishers/post-updated-publisher';
 import { natsWrapper } from '../nats-wrapper';
@@ -30,21 +31,30 @@ router.put(
       if (!post) {
         throw new NotFoundError();
       }
+
+      //check if the post can be edited
+      if (post.joinIds.length) {
+        throw new BadRequestError('cannot update a joined post');
+      }
+
       if (post.userId != req.currentUser!.id) {
-        throw new NotAuthorizedError('user is not authorized!');
+        throw new NotAuthorizedError('user is not authorized to update!');
       }
       //to update a document: pass an object to 'set'
       post.set({
         title: req.body.title,
         description: req.body.description,
         price: req.body.price,
+        numPeople: req.body.numPeople,
       });
       await post.save();
       new PostUpdatedPublisher(natsWrapper.theClient).publish({
         id: post.id,
+        version: post.version,
         title: post.title,
         price: post.price,
         userId: post.userId,
+        numPeople: post.numPeople,
       });
       res.send(post);
     } catch (err) {

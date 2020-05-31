@@ -22,6 +22,7 @@ it('returns an error if the post does not exist', async () => {
 it('returns an error if the event is full', async () => {
   //create an event (post) with numPeople = 1, save to the db, then create a join for that post, save to the db, and then finally attempt to join again (the second one should fail because the event will have been full)
   const post = Post.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 10,
     numPeople: 1,
@@ -55,6 +56,7 @@ it('returns an error if the event is full', async () => {
 it('adds a user for the event', async () => {
   //create an event (post) with numPeople = 1, save to the db, and then attempt to join the event (this should succeed because the event is not full!)
   const post = Post.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 10,
     numPeople: 1,
@@ -79,6 +81,7 @@ it('adds a user for the event', async () => {
 
 it('adds a user for two events', async () => {
   const postOne = Post.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 10,
     numPeople: 3,
@@ -86,6 +89,7 @@ it('adds a user for two events', async () => {
   await postOne.save();
 
   const postTwo = Post.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: 'hello',
     price: 20,
     numPeople: 1,
@@ -116,4 +120,30 @@ it('adds a user for two events', async () => {
     .expect(201);
 });
 
-it.todo('emits an order created event');
+it('emits an order created event', async () => {
+  const post = Post.build({
+    id: mongoose.Types.ObjectId().toHexString(),
+    title: 'concert',
+    price: 10,
+    numPeople: 1,
+  });
+  await post.save();
+
+  const user = User.build({
+    email: 't@test.com',
+  });
+  await user.save();
+
+  //attempt to join to an event that is *not* full
+  const cookie = signupHelper(user.id, user.email);
+  await request(app)
+    .post('/api/joins')
+    .set('Cookie', cookie)
+    .send({
+      postId: post.id,
+    })
+    .expect(201);
+
+  //check the event publishing
+  expect(natsWrapper.theClient.publish).toHaveBeenCalled();
+});

@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { Join, JoinStatus } from './join';
 
+//posts inside the join db need to include the version property! we need to CHECK the version # whenever we process a join event, to prevent processing events out of order!
+
 interface PostAttrs {
+  id: string;
   title: string;
   price: number;
   numPeople: number;
@@ -12,10 +16,16 @@ export interface PostDoc extends mongoose.Document {
   price: number;
   numPeople: number;
   isFull(): Promise<boolean>;
+  version: number; //our custom __v (versioning property), renamed
 }
 
 interface PostModel extends mongoose.Model<PostDoc> {
   build(attrs: PostAttrs): PostDoc;
+  //either find a postDoc from the query, or null
+  findLastEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<PostDoc | null>;
 }
 
 const postSchema = new mongoose.Schema(
@@ -46,9 +56,28 @@ const postSchema = new mongoose.Schema(
   }
 );
 
+//track the version of these records using a field "version", rather than the default "__v"
+postSchema.set('versionKey', 'version');
+//enable OCC plugin!!!!!!!
+postSchema.plugin(updateIfCurrentPlugin);
+
 //statics: adds a function to the post model
 postSchema.statics.build = (attrs: PostAttrs): PostDoc => {
-  return new Post(attrs);
+  //return new Post(attrs);
+  return new Post({
+    _id: attrs.id, //rename the id to _id so that mongo won't assign a random id to this record, and will instead use attrs.id (to be consistent with our posts service)
+    title: attrs.title,
+    price: attrs.price,
+    numPeople: attrs.numPeople,
+  });
+};
+
+//do a query for id + version of the post (abstract our custom query as a helper method)
+postSchema.statics.findLastEvent = (event: { id: string; version: number }) => {
+  return Post.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
 };
 
 //methods: adds a function to the post doc

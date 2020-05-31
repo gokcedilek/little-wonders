@@ -9,6 +9,7 @@ import { User } from '../../models/user';
 
 const createPost = async (title: string) => {
   const post = Post.build({
+    id: mongoose.Types.ObjectId().toHexString(),
     title: title,
     price: 10,
     numPeople: 1,

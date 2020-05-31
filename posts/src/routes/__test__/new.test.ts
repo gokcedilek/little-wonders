@@ -54,6 +54,7 @@ it('creates an event with valid inputs', async () => {
       title: 'jkke',
       description: 'jkwjgri',
       price: 20,
+      numPeople: 1,
     })
     .expect(201);
   posts = await Post.find({});
@@ -71,6 +72,7 @@ it('publishes an event when a valid post is created', async () => {
       title: 'jkke',
       description: 'jkwjgri',
       price: 20,
+      numPeople: 1,
     })
     .expect(201);
 

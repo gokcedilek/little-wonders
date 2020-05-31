@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { JoinStatus } from '@gdsocialevents/common/';
 import { PostDoc } from './post';
 import { UserDoc } from './user';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 export { JoinStatus };
 
@@ -12,11 +13,13 @@ interface JoinAttrs {
   post: PostDoc;
 }
 
+//mongoose.Doc has __v property: to be able to access the "version" property of a join, we need to add it to this interface
 interface JoinDoc extends mongoose.Document {
   user: UserDoc;
   status: JoinStatus;
   expAt: Date;
   post: PostDoc;
+  version: number; //our custom __v (versioning property), renamed
 }
 
 interface JoinModel extends mongoose.Model<JoinDoc> {
@@ -52,6 +55,11 @@ const joinSchema = new mongoose.Schema(
     },
   }
 );
+
+//track the version of these records using a field "version", rather than the default "__v" --> set the VALUE of "__v" to "version" --> note this is not a renaming, this is setting the value of "version"
+joinSchema.set('versionKey', 'version');
+//enable OCC plugin!!!!!!!
+joinSchema.plugin(updateIfCurrentPlugin);
 
 joinSchema.statics.build = (attrs: JoinAttrs): JoinDoc => {
   return new Join(attrs);

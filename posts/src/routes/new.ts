@@ -70,13 +70,14 @@ router.post(
   //timeValidation,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { title, description, location, time, price } = req.body;
-      console.log(title, description, price);
+      // const { title, description, location, time, price, numPeople } = req.body;
+      const { title, description, price, numPeople } = req.body;
       const post = Post.build({
         title,
         description,
         price,
         userId: req.currentUser!.id,
+        numPeople,
       });
       await post.save();
       console.log(
@@ -84,9 +85,11 @@ router.post(
       );
       new PostCreatedPublisher(natsWrapper.theClient).publish({
         id: post.id,
+        version: post.version,
         title: post.title,
         price: post.price,
         userId: post.userId,
+        numPeople: numPeople,
       });
       res.status(201).send(post);
     } catch (err) {

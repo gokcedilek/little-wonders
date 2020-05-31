@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
+import { PostCreatedListener } from './events/listeners/post-created-listener';
+import { PostUpdatedListener } from './events/listeners/post-updated-listener';
 
 const start = async () => {
   if (!process.env.JWT_KEY) {
@@ -33,6 +35,10 @@ const start = async () => {
     });
     process.on('SIGINT', () => natsWrapper.theClient.close());
     process.on('SIGTERM', () => natsWrapper.theClient.close());
+
+    //listen for incoming events that concern the joins-service
+    new PostCreatedListener(natsWrapper.theClient).listen();
+    new PostUpdatedListener(natsWrapper.theClient).listen();
 
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,

@@ -7,7 +7,7 @@ export const natsWrapper = {
   //   },
   // },
 
-  //mock function (jest.fn()): we want to ensure that the publish func of the client gets executed (which shows the event is published). to check for that, we will use a mock function, and "expect" it to get called! jest.fn() has a bunch of helper funcs to allow us to check for that
+  //jest mock function (jest.fn()): we want to ensure that the publish func of the client gets executed (which shows the event is published). to check for that, we will use a mock function, and "expect" it to get called! jest.fn() has a bunch of helper funcs to allow us to check for that
   theClient: {
     publish: jest
       .fn()

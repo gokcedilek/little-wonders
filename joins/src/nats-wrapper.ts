@@ -32,5 +32,5 @@ class NatsWrapper {
   }
 }
 
-//export a single instance of the class, share this instance across the whole project!
+//export a single instance of the class, share this instance across the whole project! gives us access to a nats client
 export const natsWrapper = new NatsWrapper();

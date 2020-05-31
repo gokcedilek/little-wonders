@@ -18,6 +18,7 @@ it('returns the event if the event is found', async () => {
   const title = 'jgejkj';
   const description = 'keginveugh';
   const price = 20;
+  const numPeople = 1;
 
   //create a new event
   const post = await request(app)
@@ -27,6 +28,7 @@ it('returns the event if the event is found', async () => {
       title,
       description,
       price,
+      numPeople,
     })
     .expect(201);
 
