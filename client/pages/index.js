@@ -1,19 +1,56 @@
-import buildClient from '../api/build-client';
+import Link from 'next/link';
 
-const LandingPage = ({ currentUser }) => {
-  return currentUser ? (
-    <h1>You are signed in</h1>
-  ) : (
-    <h1>You are not signed in</h1>
+//landing page component ('/')
+
+//the props (arguments) of this component come from the return values of the .getInitialProps function!
+const LandingPage = ({ currentUser, posts }) => {
+  // return currentUser ? (
+  //   <h1>You are signed in</h1>
+  // ) : (
+  //   <h1>You are not signed in</h1>
+  // );
+
+  //loop over posts, build a row for each post
+  const postList = posts.map((post) => {
+    return (
+      <tr key={post.id}>
+        <td>{post.title}</td>
+        <td>{post.description}</td>
+        <td>
+          {/* link to a query/wildcard route */}
+          {/* "as" specifies the real/actual URL, needed along with "href" */}
+          <Link href="/posts/[postId]" as={`/posts/${post.id}`}>
+            <a>Post Id: {post.id}</a>
+          </Link>
+        </td>
+      </tr>
+    );
+  });
+
+  return (
+    <div>
+      <h1>Posts</h1>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>See the Post!</th>
+          </tr>
+        </thead>
+        <tbody>{postList}</tbody>
+      </table>
+    </div>
   );
 };
 
-//fetch data to figure out who the current user is - ret val becomes props to the component itself!
-LandingPage.getInitialProps = async ({ req }) => {
-  console.log('landing page!');
-  const axiosClient = buildClient({ req });
-  const response = await axiosClient.get('/api/users/currentuser');
-  return response.data;
+//fetch data to figure out who the current user is - ret val from here becomes props to the component itself!
+LandingPage.getInitialProps = async (context, axiosClient, currentUser) => {
+  //axiosClient: to make request during the initial rendering process -- fetch all posts
+  const { data } = await axiosClient.get('/api/posts'); //destructure data from the "response" object
+
+  //return an object which will be provided as props to the actual component itself (in this case, Landing Page)
+  return { posts: data };
 };
 
 //OLD VERSION OF getInitialProps

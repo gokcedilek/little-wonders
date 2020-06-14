@@ -7,7 +7,7 @@ const router = express.Router();
 
 //todo: ONLY THE OWNER OF THE EVENT CAN ACCESS? need to use post.ownerId OR can only access if you've signed up for this event?
 router.get(
-  '/api/joins/:postId',
+  '/api/joins/users/:postId',
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,6 +21,7 @@ router.get(
       }
       */
       const users = await Join.find({ post: post }).populate('user');
+      console.log('this is working!');
       res.status(200).send(users);
     } catch (err) {
       return next(err);

@@ -68,6 +68,7 @@ postSchema.set('versionKey', 'version');
 postSchema.plugin(updateIfCurrentPlugin);
 
 postSchema.statics.build = (attrs: PostAttrs): PostDoc => {
+  console.log('building?');
   return new Post(attrs);
 };
 

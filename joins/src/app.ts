@@ -5,11 +5,13 @@ import {
   errorHandler,
   NotFoundError,
   currentUser,
+  NotAuthorizedError,
 } from '@gdsocialevents/common';
 import { newJoinRouter } from './routes/new';
 import { showPostsRouter } from './routes/showPosts';
 import { showUsersRouter } from './routes/showUsers';
 import { deleteJoinRouter } from './routes/delete';
+import { showJoinRouter } from './routes/show';
 
 const app = express();
 app.set('trust proxy', true); //trust traffic coming from ingress-nginx
@@ -28,10 +30,13 @@ app.use(newJoinRouter);
 app.use(showPostsRouter);
 app.use(showUsersRouter);
 app.use(deleteJoinRouter);
+app.use(showJoinRouter);
 
 //a request on any method, on a route we don't recognise - throw 404
 app.all('*', async (req, res) => {
-  throw new NotFoundError();
+  console.log('howcome??');
+  //throw new NotFoundError();
+  throw new NotAuthorizedError('howcome?');
 });
 
 app.use(errorHandler);

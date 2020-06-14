@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Password } from '../services/password';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 //interface that describes the properties (attributes) required to create a new user(record) - we shouldn't pass incorrect attributes!
 interface UserAttrs {
@@ -7,17 +8,18 @@ interface UserAttrs {
   password: string;
 }
 
-//interface that describes the properties a User Model has (to tell ts that there will be a "build" function available on this User model) - what the entire collection of users looks like! this is the key -- the model is for the collection, not each individual user!
-//all the different properties that will be assigned to the model itself *****(model: entire collection of data, document: one single record)*****
-interface UserModel extends mongoose.Model<UserDoc> {
-  build(attrs: UserAttrs): UserDoc; //makes sure we pass the correct arg.s when creating a user
-}
-
 //interface that describes the properties that a User Document has - what properties a single user has!!! (a single user is what is returned from the build function we wrote - result of calling new User()!) - return value of the build function!
 //properties that a saved user(record) has
 interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
+  version: number;
+}
+
+//interface that describes the properties a User Model has (to tell ts that there will be a "build" function available on this User model) - what the entire collection of users looks like! this is the key -- the model is for the collection, not each individual user!
+//all the different properties that will be assigned to the model itself *****(model: entire collection of data, document: one single record)*****
+interface UserModel extends mongoose.Model<UserDoc> {
+  build(attrs: UserAttrs): UserDoc; //makes sure we pass the correct arg.s when creating a user
 }
 
 //schema: properties that a user has
@@ -42,7 +44,7 @@ const userSchema = new mongoose.Schema(
         delete ret.password; //js keyword - remove a property from an object
         //delete ret.__v; //same thing as versionKey: false
       },
-      versionKey: false,
+      //versionKey: false,
     },
   }
 );
@@ -58,6 +60,11 @@ userSchema.pre('save', async function (done) {
   }
   done(); //after all the async work
 });
+
+//track the version of these records using a field "version", rather than the default "__v"
+userSchema.set('versionKey', 'version');
+//enable OCC plugin!!!!!!!
+userSchema.plugin(updateIfCurrentPlugin);
 
 //the purpose of this function is to allow ts to do typechecking on the attributes that we input to create a user
 userSchema.statics.build = (attrs: UserAttrs): UserDoc => {

@@ -22,6 +22,7 @@ export interface PostDoc extends mongoose.Document {
 interface PostModel extends mongoose.Model<PostDoc> {
   build(attrs: PostAttrs): PostDoc;
   //either find a postDoc from the query, or null
+  //rename to findLastPost
   findLastEvent(event: {
     id: string;
     version: number;

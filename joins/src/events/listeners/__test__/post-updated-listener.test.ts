@@ -20,7 +20,7 @@ const setup = async () => {
 
   //create a fake data object (want to update the same post we've created above, so use post.id)
   const data: PostUpdatedEvent['data'] = {
-    version: post.version + 1,
+    version: post.version + 1, //this is what our db will do, we are simulating that behaviour (version + 1)
     id: post.id,
     title: 'new concert',
     price: 15, //different price

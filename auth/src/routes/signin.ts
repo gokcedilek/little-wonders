@@ -43,10 +43,11 @@ router.post(
     );
 
     //store the jwt on the session object --> cookie-session will serialize this (base64 encoded) and send it off to the user's browser!
+    // @ts-ignore
     req.session = {
       jwt: userJWT,
     };
-
+    console.log('signed in??');
     res.status(200).send(existingUser);
   }
 );

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-redis-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration-redis
+  template: #how to create each individual pod that this deployment will create
+    metadata:
+      labels: #this label matches up with the "matchLabels" in the "selector"
+        app: expiration-redis
+    spec: #tell pod how to behave
+      containers:
+        - name: expiration-redis
+          image: redis #this image is coming from the public mongo image on dockerhub to get a mongodb database!
+
+---
+#config for our service
+#clusterIP service: allow communication to the service from anything else running inside of our cluster!
+apiVersion: v1
+kind: Service
+metadata:
+  name: expiration-redis-srv #DOMAIN NAME to connect to get to our db!
+spec: #tell the service how to behave
+  selector: #tell the service how to find the pods that it should govern access to - all the pods with label "app: auth"
+    app: expiration-redis
+  ports: #ports to expose on that pod
+    - name: db #testing purposes
+      protocol: TCP
+      port: 6379 #default port mongodb listens to!
+      targetPort: 6379

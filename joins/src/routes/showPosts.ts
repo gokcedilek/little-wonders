@@ -5,25 +5,18 @@ import { Join } from '../models/join';
 
 const router = express.Router();
 
-//get all events the current user has signed up for
+//get all joins (& events) the current user has signed up for
 router.get(
   '/api/joins',
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // const posts = await Join.find({ user: user }, 'post');
-      // const existingJoins = await Join.find({}, 'post').populate({
-      //   path: 'user',
-      //   match: {
-      //     email: req.currentUser!.email,
-      //   },
-      // });
       const user = await User.findById(req.currentUser!.id);
       if (!user) {
         throw new NotFoundError();
       }
-      const posts = await Join.find({ user: user }).populate('post');
-      res.status(200).send(posts);
+      const joins = await Join.find({ user: user }).populate('post');
+      res.status(200).send(joins);
     } catch (err) {
       return next(err);
     }

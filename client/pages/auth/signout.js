@@ -8,7 +8,7 @@ export default () => {
     url: '/api/users/signout',
     method: 'post',
     body: {},
-    onSuccess: () => Router.push('/'),
+    onSuccess: () => Router.push('/'), //navigate user to a new route
   });
 
   //the doRequest func will only called ONCE when it's rendered for the first time (not after every render) so we need to pass in []

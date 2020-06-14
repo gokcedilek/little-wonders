@@ -80,16 +80,14 @@ router.post(
         numPeople,
       });
       await post.save();
-      console.log(
-        `arrived here with ${post.id}, ${post.title}, ${post.price}, ${post.userId}`
-      );
+
       new PostCreatedPublisher(natsWrapper.theClient).publish({
         id: post.id,
         version: post.version,
         title: post.title,
         price: post.price,
         userId: post.userId,
-        numPeople: numPeople,
+        numPeople: post.numPeople,
       });
       res.status(201).send(post);
     } catch (err) {

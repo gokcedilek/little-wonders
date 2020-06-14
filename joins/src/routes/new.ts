@@ -16,7 +16,7 @@ import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
-const EXP_WINDOW_SECONDS = 15 * 60; //15 minutes -- TODO: you can save this as a k8s env variable!!!
+const EXP_WINDOW_SECONDS = 1 * 60; //15 minutes -- TODO: you can save this as a k8s env variable!!!
 
 //custom validation: input id --> bool representing valid id or not (if the user is providing a valid mongo id)
 const joinValidationRules = () => {
@@ -42,6 +42,7 @@ router.post(
       const { postId } = req.body;
       const post = await Post.findById(postId);
       if (!post) {
+        console.log('post not found!');
         throw new NotFoundError();
       }
 
@@ -51,10 +52,9 @@ router.post(
       // }
       const user = await User.findById(req.currentUser!.id);
       if (!user) {
+        console.log('user not found!');
         throw new NotFoundError();
       }
-      // console.log('user id from db: ', user.id);
-      // console.log('current user id: ', req.currentUser!.id);
 
       //check if there is space available to sign up for
       const isFull = await post.isFull();

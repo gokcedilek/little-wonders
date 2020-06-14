@@ -1,7 +1,7 @@
 import { PostCreatedListener } from '../post-created-listener';
 import { natsWrapper } from '../../../nats-wrapper';
 import { PostCreatedEvent } from '@gdsocialevents/common';
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
 import { Post } from '../../../models/post';
 

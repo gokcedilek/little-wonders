@@ -7,16 +7,18 @@ export default ({ currentUser }) => {
   const links = [
     !currentUser && { label: 'sign up', href: '/auth/signup' },
     !currentUser && { label: 'sign in', href: '/auth/signin' },
+    currentUser && { label: 'post event', href: '/posts/new' },
+    currentUser && { label: 'my events', href: '/joins' },
     currentUser && { label: 'sign out', href: '/auth/signout' },
   ]
-    //only keep the indices that are not false
+    //only keep the indices that are not false (the correct links we should show based on which page we are on)
     .filter((link) => link)
     //convert the remaining objects into a html list
     .map((link) => {
       return (
         <li key={link.href} className="nav-item">
           <Link href={link.href}>
-            <a className="navbar-link">{link.label}</a>
+            <a className="nav-link">{link.label}</a>
           </Link>
         </li>
       );

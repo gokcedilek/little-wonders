@@ -11,15 +11,22 @@ export class PostCreatedListener extends Listener<PostCreatedEvent> {
 
   async onMessage(data: PostCreatedEvent['data'], msg: Message) {
     const { id, title, price, numPeople } = data;
+    //console.log('saving post to joins with: ', id, title, price, numPeople);
     const post = Post.build({
       id,
       title,
       price,
       numPeople,
     });
-    await post.save();
-
-    //event processed successfully
+    //console.log('whats happening?');
+    console.log(post);
+    //const res = await post.save();
+    try {
+      await post.save();
+    } catch (err) {
+      console.log('error!');
+      console.log(err);
+    }
     msg.ack();
   }
 }

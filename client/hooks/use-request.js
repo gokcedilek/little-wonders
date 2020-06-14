@@ -14,7 +14,7 @@ export default ({ url, method, body, onSuccess }) => {
       //lookup the appropriate request method
       const response = await axios[method](url, body);
 
-      //if the onSuccess callback is provided, call that --> will be executed if the request attempt did not throw an error
+      //if the onSuccess callback is provided, call that --> will be executed if the request attempt did not throw an error, with the data we got back from the request
       if (onSuccess) {
         onSuccess(response.data);
       }

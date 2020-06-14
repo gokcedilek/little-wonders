@@ -15,6 +15,7 @@ export default () => {
     onSuccess: () => Router.push('/'),
   });
 
+  //when the form is submitted, make the request to the back-end
   const onSubmit = async (event) => {
     event.preventDefault(); //prevent form from submitting itself to the browser
 
@@ -41,7 +42,7 @@ export default () => {
           className="form-control"
         />
       </div>
-      {errors}{' '}
+      {errors}
       {/* this variable will only be set if there's an error when making the request */}
       <button className="btn btn-primary">Sign Up</button>
     </form>
