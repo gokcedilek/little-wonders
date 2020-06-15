@@ -39,15 +39,15 @@ export class JoinCancelledListener extends Listener<JoinCancelledEvent> {
     }
 
     //publish an update event, so that the version update gets reflected to the joins service! (it will listen for this event) --> *a listener publishing an event!!*
-    await new PostUpdatedPublisher(this.client).publish({
-      id: updatedPost.id,
-      version: updatedPost.version, //this is what has been changed inside this listener, so this is the reason why we need to publish a post-update event!
-      title: updatedPost.title,
-      price: updatedPost.price,
-      userId: updatedPost.userId,
-      numPeople: updatedPost.numPeople,
-      joinIds: updatedPost.joinIds,
-    });
+    // await new PostUpdatedPublisher(this.client).publish({
+    //   id: updatedPost.id,
+    //   version: updatedPost.version, //this is what has been changed inside this listener, so this is the reason why we need to publish a post-update event!
+    //   title: updatedPost.title,
+    //   price: updatedPost.price,
+    //   userId: updatedPost.userId,
+    //   numPeople: updatedPost.numPeople,
+    //   joinIds: updatedPost.joinIds,
+    // });
 
     //ack the message
     msg.ack();

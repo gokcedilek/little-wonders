@@ -1,5 +1,6 @@
 import useRequest from '../../hooks/use-request';
 import Router from 'next/router';
+import Link from 'next/link';
 
 const PostShow = ({ post }) => {
   const { doRequest, errors } = useRequest({
@@ -13,8 +14,14 @@ const PostShow = ({ post }) => {
 
   return (
     <div>
-      <h1>{post.title}</h1>
-      <h4>{post.description}</h4>
+      <h4>Title: {post.title}</h4>
+      <h4>Descr: {post.description}</h4>
+      <h4>
+        Loc: {post.location}
+        <Link href="https://www.google.com/">
+          <a>google maps</a>
+        </Link>
+      </h4>
       {errors}
       {/*whenever the user clicks the button, make the request*/}
       <button onClick={doRequest} className="btn btn-primary">

@@ -11,10 +11,16 @@ import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
-const eventValidationRules = () => {
+const postValidationRules = () => {
   return [
     body('title').not().isEmpty().withMessage('title is required!'),
     body('description').not().isEmpty().withMessage('description is required!'),
+    body('location').not().isEmpty().withMessage('location is required!'),
+    body('numPeople')
+      .not()
+      .isEmpty()
+      .withMessage('number of people is required!'),
+    body('time').not().isEmpty().withMessage('time is required!'),
   ];
 };
 
@@ -63,31 +69,36 @@ const timeValidation = (req: Request, res: Response, next: NextFunction) => {
 
 router.post(
   '/api/posts',
-  requireAuth,
-  eventValidationRules(),
+  //requireAuth,
+  postValidationRules(),
   validateRequest,
-  //locationValidation,
+  locationValidation,
   //timeValidation,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // const { title, description, location, time, price, numPeople } = req.body;
-      const { title, description, price, numPeople } = req.body;
+      const { title, description, location, time, numPeople } = req.body;
+      console.log('received time: ', time);
       const post = Post.build({
         title,
         description,
-        price,
         userId: req.currentUser!.id,
         numPeople,
+        location,
+        time,
       });
       await post.save();
+
+      console.log('saved post: ', post);
 
       new PostCreatedPublisher(natsWrapper.theClient).publish({
         id: post.id,
         version: post.version,
         title: post.title,
-        price: post.price,
+        description: post.description,
         userId: post.userId,
         numPeople: post.numPeople,
+        location: post.location,
+        time: post.time,
       });
       res.status(201).send(post);
     } catch (err) {

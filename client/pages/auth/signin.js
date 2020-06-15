@@ -12,7 +12,12 @@ export default () => {
       email,
       password,
     },
-    onSuccess: () => Router.push('/'),
+    onSuccess: () => {
+      <a class="btn btn-info" onclick="toastr.info('Hi! I am info message.');">
+        Info message
+      </a>;
+      Router.push('/');
+    },
   });
 
   const onSubmit = async (event) => {

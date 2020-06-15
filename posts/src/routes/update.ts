@@ -33,9 +33,9 @@ router.put(
       }
 
       //check if the post can be edited
-      if (post.joinIds.length) {
-        throw new BadRequestError('cannot update a joined post');
-      }
+      // if (post.joinIds.length) {
+      //   throw new BadRequestError('cannot update a joined post');
+      // }
 
       if (post.userId != req.currentUser!.id) {
         throw new NotAuthorizedError('user is not authorized to update!');
@@ -44,17 +44,21 @@ router.put(
       post.set({
         title: req.body.title,
         description: req.body.description,
-        price: req.body.price,
         numPeople: req.body.numPeople,
+        location: req.body.location,
+        time: req.body.time,
       });
       await post.save();
+
       new PostUpdatedPublisher(natsWrapper.theClient).publish({
         id: post.id,
         version: post.version,
         title: post.title,
-        price: post.price,
+        description: post.description,
         userId: post.userId,
         numPeople: post.numPeople,
+        location: post.location,
+        time: post.time,
       });
       res.send(post);
     } catch (err) {
