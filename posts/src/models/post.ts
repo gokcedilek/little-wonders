@@ -4,18 +4,20 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 interface PostAttrs {
   title: string;
   description: string;
-  price: number;
   userId: string;
   numPeople: number;
+  location: string;
+  time: string;
 }
 
 //mongoose.Document has a property "__v", we need to add "version" to the post document
 interface PostDoc extends mongoose.Document {
   title: string;
   description: string;
-  price: number;
   userId: string;
   numPeople: number;
+  location: string;
+  time: string;
   version: number; //our custom field used for versioning, OCC
   joinIds: [string];
 }
@@ -34,10 +36,6 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
     userId: {
       type: String,
       required: true,
@@ -46,6 +44,14 @@ const postSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 1,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    time: {
+      type: String,
+      required: true,
     },
     joinIds: {
       type: [String],
@@ -68,7 +74,6 @@ postSchema.set('versionKey', 'version');
 postSchema.plugin(updateIfCurrentPlugin);
 
 postSchema.statics.build = (attrs: PostAttrs): PostDoc => {
-  console.log('building?');
   return new Post(attrs);
 };
 
