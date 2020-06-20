@@ -9,7 +9,7 @@ export { JoinStatus };
 interface JoinAttrs {
   user: UserDoc;
   status: JoinStatus;
-  expAt: Date;
+  //expAt: Date;
   post: PostDoc;
 }
 
@@ -17,7 +17,7 @@ interface JoinAttrs {
 interface JoinDoc extends mongoose.Document {
   user: UserDoc;
   status: JoinStatus;
-  expAt: Date;
+  // expAt: Date;
   post: PostDoc;
   version: number; //our custom __v (versioning property), renamed
 }
@@ -38,9 +38,9 @@ const joinSchema = new mongoose.Schema(
       enum: Object.values(JoinStatus), //set, update etc: mongoose will make sure we set the value to one of the values in JoinStatus
       default: JoinStatus.Created,
     },
-    expAt: {
-      type: mongoose.Schema.Types.Date,
-    },
+    // expAt: {
+    //   type: mongoose.Schema.Types.Date,
+    // },
     post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Post',

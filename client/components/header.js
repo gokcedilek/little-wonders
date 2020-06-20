@@ -7,8 +7,9 @@ export default ({ currentUser }) => {
   const links = [
     !currentUser && { label: 'sign up', href: '/auth/signup' },
     !currentUser && { label: 'sign in', href: '/auth/signin' },
-    currentUser && { label: 'post event', href: '/posts/new' },
-    currentUser && { label: 'my events', href: '/joins' },
+    currentUser && { label: 'create new', href: '/posts/new' },
+    currentUser && { label: 'joined by me', href: '/joins' },
+    currentUser && { label: 'created by me', href: '/posts' },
     currentUser && { label: 'sign out', href: '/auth/signout' },
   ]
     //only keep the indices that are not false (the correct links we should show based on which page we are on)

@@ -10,7 +10,7 @@ router.get(
     try {
       const post = await Post.findById(req.params.id);
       if (!post) {
-        throw new NotFoundError();
+        throw new NotFoundError('This post does not exist!');
       }
       res.send(post).status(200);
     } catch (err) {

@@ -16,19 +16,16 @@ router.get(
     try {
       const user = await User.findById(req.currentUser!.id);
       if (!user) {
-        console.log('user not found');
-        throw new NotFoundError();
+        throw new NotFoundError('This user does not exist!');
       }
       const join = await Join.findById(req.params.joinId).populate('user');
       if (!join) {
-        console.log('join not found');
-        throw new NotFoundError();
+        throw new NotFoundError('This join does not exist!');
       }
       if (user.id != join.user.id) {
         throw new NotAuthorizedError('this join does not belong to this user!');
       }
       //otherwise, join belongs to the user, send it back
-      console.log('FOUND THE JOIN');
       res.status(200).send(join);
     } catch (err) {
       return next(err);

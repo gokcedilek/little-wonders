@@ -7,6 +7,7 @@ const JoinIndex = ({ joins }) => {
         <li key={join.id}>{join.post.title}</li>;
       })}
     </ul>
+    //note: each join shoukd have a button: cancel join -- if this is clicked, make a delete request to /api/joins/join.post.id
   );
 };
 

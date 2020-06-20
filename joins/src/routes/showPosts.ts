@@ -13,7 +13,7 @@ router.get(
     try {
       const user = await User.findById(req.currentUser!.id);
       if (!user) {
-        throw new NotFoundError();
+        throw new NotFoundError('This user does not exist!');
       }
       const joins = await Join.find({ user: user }).populate('post');
       res.status(200).send(joins);

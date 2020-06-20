@@ -6,7 +6,6 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
-  BadRequestError,
 } from '@gdsocialevents/common';
 import { PostUpdatedPublisher } from '../events/publishers/post-updated-publisher';
 import { natsWrapper } from '../nats-wrapper';
@@ -29,16 +28,19 @@ router.put(
     try {
       const post = await Post.findById(req.params.id);
       if (!post) {
-        throw new NotFoundError();
+        throw new NotFoundError('This post does not exist!');
       }
 
       //check if the post can be edited
       // if (post.joinIds.length) {
       //   throw new BadRequestError('cannot update a joined post');
+      // maybe if this post has been joined, send email to people who signed up to notify them about the change to the post (instead of preventing any updates to the post if poeple have signed up)
       // }
 
       if (post.userId != req.currentUser!.id) {
-        throw new NotAuthorizedError('user is not authorized to update!');
+        throw new NotAuthorizedError(
+          'You are not authorized to update this post!'
+        );
       }
       //to update a document: pass an object to 'set'
       post.set({

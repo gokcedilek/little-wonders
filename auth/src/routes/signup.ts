@@ -25,7 +25,6 @@ router.post(
   validateRequest,
   signupUser,
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log('hello!');
     try {
       const { email, password } = req.body;
 
@@ -39,23 +38,17 @@ router.post(
         process.env.JWT_KEY!
       );
 
-      console.log(userJWT);
-
       //store the jwt on the session object --> cookie-session will serialize this (base64 encoded) and send it off to the user's browser!
       // @ts-ignore
       req.session = {
         jwt: userJWT,
       };
 
-      console.log('is everything ok?');
-
-      //emit user-created-event!
       new UserCreatedPublisher(natsWrapper.theClient).publish({
         id: user.id,
         version: user.version,
         email: user.email,
       });
-      console.log('hmmmm');
       res.status(201).send(user);
     } catch (err) {
       console.log(err);

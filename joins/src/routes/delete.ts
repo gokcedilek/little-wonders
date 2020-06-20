@@ -1,10 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import {
-  requireAuth,
-  validateRequest,
-  NotFoundError,
-  BadRequestError,
-} from '@gdsocialevents/common';
+import { requireAuth, NotFoundError } from '@gdsocialevents/common';
 import { Join, JoinStatus } from '../models/join';
 import { Post } from '../models/post';
 import { User } from '../models/user';
@@ -23,17 +18,17 @@ router.delete(
 
       const post = await Post.findById(postId);
       if (!post) {
-        throw new NotFoundError();
+        throw new NotFoundError('This post does not exist!');
       }
 
       const user = await User.findById(userId);
       if (!user) {
-        throw new NotFoundError();
+        throw new NotFoundError('This user does not exist!');
       }
 
       const join = await Join.findOne({ user: user, post: post });
       if (!join) {
-        throw new NotFoundError();
+        throw new NotFoundError('This join does not exist!');
       }
 
       join.status = JoinStatus.Cancelled;
