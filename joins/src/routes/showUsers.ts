@@ -5,6 +5,7 @@ import { requireAuth, NotFoundError } from '@gdsocialevents/common';
 
 const router = express.Router();
 
+//show users who signed up for a post/event
 //todo: ONLY THE OWNER OF THE EVENT CAN ACCESS? need to use post.ownerId OR can only access if you've signed up for this event?
 router.get(
   '/api/joins/users/:postId',
@@ -13,7 +14,7 @@ router.get(
     try {
       const post = await Post.findById(req.params.postId);
       if (!post) {
-        throw new NotFoundError();
+        throw new NotFoundError('This post does not exist!');
       }
       /*
       if(post.ownerId !== req.currentUser!.id) {
@@ -21,7 +22,6 @@ router.get(
       }
       */
       const users = await Join.find({ post: post }).populate('user');
-      console.log('this is working!');
       res.status(200).send(users);
     } catch (err) {
       return next(err);

@@ -74,9 +74,4 @@ userSchema.statics.build = (attrs: UserAttrs): UserDoc => {
 //< >: generic type args to the model function
 const User = mongoose.model<UserDoc, UserModel>('User', userSchema); //returns a UserModel (not a single user)
 
-// const user = User.build({
-//   email: 'jrngke',
-//   password: 'jgrke',
-// });
-
 export { User }; //user model

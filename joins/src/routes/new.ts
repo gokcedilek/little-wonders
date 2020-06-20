@@ -16,7 +16,7 @@ import { natsWrapper } from '../nats-wrapper';
 
 const router = express.Router();
 
-const EXP_WINDOW_SECONDS = 1 * 60; //15 minutes -- TODO: you can save this as a k8s env variable!!!
+//const EXP_WINDOW_SECONDS = 1 * 60; //15 minutes -- TODO: you can save this as a k8s env variable!!!
 
 //custom validation: input id --> bool representing valid id or not (if the user is providing a valid mongo id)
 const joinValidationRules = () => {
@@ -42,34 +42,28 @@ router.post(
       const { postId } = req.body;
       const post = await Post.findById(postId);
       if (!post) {
-        console.log('post not found!');
-        throw new NotFoundError();
+        throw new NotFoundError('This post does not exist!');
       }
 
-      // const user = await User.findOne({ email: req.currentUser!.email });
-      // if (!user) {
-      //   throw new NotFoundError();
-      // }
       const user = await User.findById(req.currentUser!.id);
       if (!user) {
-        console.log('user not found!');
-        throw new NotFoundError();
+        throw new NotFoundError('This user does not exist!');
       }
 
       //check if there is space available to sign up for
       const isFull = await post.isFull();
       if (isFull) {
-        throw new BadRequestError('event is already full!');
+        throw new BadRequestError('This event is already full!');
       }
 
       //calculate exp date for this signup attempt
-      const expiration = new Date();
-      expiration.setSeconds(expiration.getSeconds() + EXP_WINDOW_SECONDS);
+      // const expiration = new Date();
+      // expiration.setSeconds(expiration.getSeconds() + EXP_WINDOW_SECONDS);
 
       const join = Join.build({
         user: user,
         status: JoinStatus.Created,
-        expAt: expiration,
+        //expAt: expiration,
         post: post,
       });
       await join.save();
@@ -77,12 +71,11 @@ router.post(
       //publish an event for the successful join
       new JoinCreatedPublisher(natsWrapper.theClient).publish({
         id: join.id,
-        status: join.status,
+        //status: join.status, //no need, because weknow what the status is...
         userId: user.id,
-        expiresAt: join.expAt.toISOString(),
+        //expiresAt: join.expAt.toISOString(),
         post: {
           id: post.id,
-          price: post.price,
         },
         version: join.version,
       });

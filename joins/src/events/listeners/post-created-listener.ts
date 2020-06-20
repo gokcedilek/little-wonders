@@ -10,23 +10,25 @@ export class PostCreatedListener extends Listener<PostCreatedEvent> {
   queueGroupName = queueGroupName;
 
   async onMessage(data: PostCreatedEvent['data'], msg: Message) {
-    const { id, title, price, numPeople } = data;
-    //console.log('saving post to joins with: ', id, title, price, numPeople);
+    const { id, title, description, userId, numPeople, location, time } = data;
     const post = Post.build({
       id,
       title,
-      price,
+      description,
+      userId,
       numPeople,
+      location,
+      time,
     });
-    //console.log('whats happening?');
-    console.log(post);
-    //const res = await post.save();
+
     try {
       await post.save();
+      msg.ack();
     } catch (err) {
+      //we wont ack the message
+      //do we need to throw an error here? "throw err;"??
       console.log('error!');
       console.log(err);
     }
-    msg.ack();
   }
 }

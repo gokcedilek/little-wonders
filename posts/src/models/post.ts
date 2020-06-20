@@ -19,7 +19,7 @@ interface PostDoc extends mongoose.Document {
   location: string;
   time: string;
   version: number; //our custom field used for versioning, OCC
-  joinIds: [string];
+  joinIds: [string]; //only this field of post will not be shared with the "joins" service, because the "joins" service already knows about this info!
 }
 
 interface PostModel extends mongoose.Model<PostDoc> {

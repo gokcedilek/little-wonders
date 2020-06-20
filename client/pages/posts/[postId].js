@@ -15,12 +15,14 @@ const PostShow = ({ post }) => {
   return (
     <div>
       <h4>Title: {post.title}</h4>
-      <h4>Descr: {post.description}</h4>
+      <h4>Description: {post.description}</h4>
       <h4>
-        Loc: {post.location}
-        <Link href="https://www.google.com/">
-          <a>google maps</a>
+        Location: {post.location}
+        <Link href="/posts/map">
+          <a>See on Google Maps!</a>
         </Link>
+        {/* link is only for path in /pages directory! */}
+        {/* add a button: onclick of the button, Router.push('http:google')  https://nextjs.org/docs/api-reference/next/router*/}
       </h4>
       {errors}
       {/*whenever the user clicks the button, make the request*/}

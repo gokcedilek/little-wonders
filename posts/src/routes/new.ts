@@ -1,4 +1,3 @@
-//create a new event
 import express, { Request, Response, NextFunction, response } from 'express';
 import { requireAuth } from '@gdsocialevents/common';
 import { body } from 'express-validator';
@@ -41,11 +40,11 @@ const locationValidation = async (
     });
     console.log(result.data);
     if (result.data.status === Status.OK) {
-      console.log(result.data.results[0].geometry.location);
+      console.log(result.data.results[0].geometry.location); //do we want to show this location on the map? is this useful info? you know what, we can put a button on the client side that says "see in google maps", and if the user clicks that button, we would use this info to display on the map!
       return next();
     } else {
       console.log(result.data.status);
-      throw new NotFoundError();
+      throw new NotFoundError('Event location could not be validated!');
     }
   } catch (err) {
     console.log('err!');
@@ -63,17 +62,17 @@ const timeValidation = (req: Request, res: Response, next: NextFunction) => {
     return next();
   } else {
     console.log('nope!');
-    throw new NotFoundError();
+    throw new NotFoundError('Event time could not be validated!');
   }
 };
 
 router.post(
   '/api/posts',
-  //requireAuth,
+  requireAuth,
   postValidationRules(),
   validateRequest,
   locationValidation,
-  //timeValidation,
+  timeValidation,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { title, description, location, time, numPeople } = req.body;

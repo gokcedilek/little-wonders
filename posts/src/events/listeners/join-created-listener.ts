@@ -39,14 +39,16 @@ export class JoinCreatedListener extends Listener<JoinCreatedEvent> {
     }
 
     //publish an update event, so that the version update gets reflected to the joins service! (it will listen for this event) --> *a listener publishing an event!!*
-    // await new PostUpdatedPublisher(this.client).publish({
-    //   id: updatedPost.id,
-    //   version: updatedPost.version, //this is what has been changed inside this listener, so this is the reason why we need to publish a post-update event!
-    //   title: updatedPost.title,
-    //   userId: updatedPost.userId,
-    //   numPeople: updatedPost.numPeople,
-    //   joinIds: updatedPost.joinIds,
-    // });
+    await new PostUpdatedPublisher(this.client).publish({
+      id: updatedPost.id,
+      version: updatedPost.version, //this is what has been changed inside this listener, so this is the reason why we need to publish a post-update event!
+      title: updatedPost.title,
+      description: updatedPost.description,
+      userId: updatedPost.userId,
+      numPeople: updatedPost.numPeople,
+      location: updatedPost.location,
+      time: updatedPost.time,
+    });
 
     //ack the message
     msg.ack();

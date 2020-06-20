@@ -17,14 +17,10 @@ export class UserCreatedListener extends Listener<UserCreatedEvent> {
     });
     try {
       await user.save();
+      msg.ack();
     } catch (err) {
       console.log('error!');
       console.log(err);
     }
-    console.log(user);
-    console.log('saved a user!!!!!!!');
-
-    //event processed successfully
-    msg.ack();
   }
 }

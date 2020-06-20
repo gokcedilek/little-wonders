@@ -5,16 +5,22 @@ import { Join, JoinStatus } from './join';
 //posts inside the join db need to include the version property! we need to CHECK the version # whenever we process a join event, to prevent processing events out of order!
 
 interface PostAttrs {
-  id: string;
+  id: string; //because "post" is actually defined in another service, we want to override the default "id" provided for post documents in the joins service, with the actual id of the post defined in the posts service
   title: string;
-  price: number;
+  description: string;
+  userId: string;
   numPeople: number;
+  location: string;
+  time: string;
 }
 
 export interface PostDoc extends mongoose.Document {
   title: string;
-  price: number;
+  description: string;
+  userId: string;
   numPeople: number;
+  location: string;
+  time: string;
   isFull(): Promise<boolean>;
   version: number; //our custom __v (versioning property), renamed
 }
@@ -22,11 +28,7 @@ export interface PostDoc extends mongoose.Document {
 interface PostModel extends mongoose.Model<PostDoc> {
   build(attrs: PostAttrs): PostDoc;
   //either find a postDoc from the query, or null
-  //rename to findLastPost
-  findLastEvent(event: {
-    id: string;
-    version: number;
-  }): Promise<PostDoc | null>;
+  findLastPost(event: { id: string; version: number }): Promise<PostDoc | null>;
 }
 
 const postSchema = new mongoose.Schema(
@@ -35,15 +37,26 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
+    description: {
+      type: String,
       required: true,
-      min: 0,
+    },
+    userId: {
+      type: String,
+      required: true,
     },
     numPeople: {
       type: Number,
       required: true,
       min: 1,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    time: {
+      type: String,
+      required: true,
     },
   },
   {
@@ -68,13 +81,16 @@ postSchema.statics.build = (attrs: PostAttrs): PostDoc => {
   return new Post({
     _id: attrs.id, //rename the id to _id so that mongo won't assign a random id to this record, and will instead use attrs.id (to be consistent with our posts service)
     title: attrs.title,
-    price: attrs.price,
+    description: attrs.description,
+    userId: attrs.userId,
     numPeople: attrs.numPeople,
+    location: attrs.location,
+    time: attrs.time,
   });
 };
 
 //do a query for id + version of the post (abstract our custom query as a helper method)
-postSchema.statics.findLastEvent = (event: { id: string; version: number }) => {
+postSchema.statics.findLastPost = (event: { id: string; version: number }) => {
   return Post.findOne({
     _id: event.id,
     version: event.version - 1,
@@ -89,12 +105,11 @@ postSchema.methods.isFull = async function () {
     status: {
       $in: [
         JoinStatus.Created,
-        JoinStatus.AwaitingPayment,
-        JoinStatus.Complete,
+        // JoinStatus.AwaitingPayment,
+        // JoinStatus.Complete,
       ],
     },
   });
-  //console.log(existingJoins);
   return existingJoins.length >= this.numPeople;
 };
 

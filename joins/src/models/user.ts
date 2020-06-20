@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
-import { Join, JoinStatus } from './join';
+import { Join } from './join';
 
 interface UserAttrs {
   id: string;

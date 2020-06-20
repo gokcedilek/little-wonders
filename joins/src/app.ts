@@ -3,9 +3,8 @@ import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 import {
   errorHandler,
-  NotFoundError,
   currentUser,
-  NotAuthorizedError,
+  NotFoundError,
 } from '@gdsocialevents/common';
 import { newJoinRouter } from './routes/new';
 import { showPostsRouter } from './routes/showPosts';
@@ -35,8 +34,7 @@ app.use(showJoinRouter);
 //a request on any method, on a route we don't recognise - throw 404
 app.all('*', async (req, res) => {
   console.log('howcome??');
-  //throw new NotFoundError();
-  throw new NotAuthorizedError('howcome?');
+  throw new NotFoundError('This route does not exist!');
 });
 
 app.use(errorHandler);

@@ -10,6 +10,7 @@ import { createPostRouter } from './routes/new';
 import { showPostRouter } from './routes/show';
 import { indexPostRouter } from './routes/index';
 import { updatePostRouter } from './routes/update';
+import { mypostsPostRouter } from './routes/myposts';
 
 const app = express();
 app.set('trust proxy', true); //trust traffic coming from ingress-nginx
@@ -28,10 +29,11 @@ app.use(createPostRouter);
 app.use(showPostRouter);
 app.use(indexPostRouter);
 app.use(updatePostRouter);
+app.use(mypostsPostRouter);
 
 //a request on any method, on a route we don't recognise - throw 404
 app.all('*', async (req, res) => {
-  throw new NotFoundError();
+  throw new NotFoundError('This route does not exist!');
 });
 
 app.use(errorHandler);
