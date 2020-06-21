@@ -18,7 +18,6 @@ export default ({ url, method, body, onSuccess }) => {
       if (onSuccess) {
         onSuccess(response.data);
       }
-
       return response.data;
     } catch (err) {
       //set the "errors" to be a descriptive JSX block so that components that use this hook can display the value of the "errors" variable returned from this function easily!

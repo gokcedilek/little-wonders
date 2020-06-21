@@ -1,8 +1,8 @@
 const JoinShow = ({ join }) => {
   return (
     <div>
-      <h1>{join.title}</h1>
-      <h4>{join.description}</h4>
+      <h1>{join.status}</h1>
+      <h4>{join.user.email}</h4>
     </div>
   );
 };

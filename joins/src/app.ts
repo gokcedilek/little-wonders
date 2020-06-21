@@ -6,11 +6,11 @@ import {
   currentUser,
   NotFoundError,
 } from '@gdsocialevents/common';
-import { newJoinRouter } from './routes/new';
-import { showPostsRouter } from './routes/showPosts';
-import { showUsersRouter } from './routes/showUsers';
-import { deleteJoinRouter } from './routes/delete';
-import { showJoinRouter } from './routes/show';
+import { newJoinRouter } from './routes/new-join';
+import { userJoinsRouter } from './routes/user-joins';
+import { joinUsersRouter } from './routes/join-users';
+import { deleteJoinRouter } from './routes/delete-join';
+import { showJoinRouter } from './routes/show-join';
 
 const app = express();
 app.set('trust proxy', true); //trust traffic coming from ingress-nginx
@@ -26,14 +26,13 @@ app.use(
 app.use(currentUser);
 
 app.use(newJoinRouter);
-app.use(showPostsRouter);
-app.use(showUsersRouter);
+app.use(userJoinsRouter);
+app.use(joinUsersRouter);
 app.use(deleteJoinRouter);
 app.use(showJoinRouter);
 
 //a request on any method, on a route we don't recognise - throw 404
 app.all('*', async (req, res) => {
-  console.log('howcome??');
   throw new NotFoundError('This route does not exist!');
 });
 

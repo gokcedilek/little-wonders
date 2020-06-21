@@ -5,13 +5,12 @@ import { requireAuth } from '@gdsocialevents/common';
 const router = express.Router();
 
 router.get(
-  '/api/posts/my/all',
+  '/api/posts/of/user',
   requireAuth,
   async (req: Request, res: Response) => {
-    console.log('REACHED!');
-    const myposts = await Post.find({ userId: req.currentUser!.id });
-    res.send(myposts).status(200);
+    const posts = await Post.find({ userId: req.currentUser!.id });
+    res.send(posts).status(200);
   }
 );
 
-export { router as mypostsPostRouter };
+export { router as userPostsRouter };

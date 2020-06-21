@@ -29,4 +29,4 @@ router.get(
   }
 );
 
-export { router as showUsersRouter };
+export { router as joinUsersRouter };

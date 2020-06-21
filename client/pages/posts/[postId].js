@@ -21,9 +21,8 @@ const PostShow = ({ post }) => {
         <Link href="/posts/map">
           <a>See on Google Maps!</a>
         </Link>
-        {/* link is only for path in /pages directory! */}
-        {/* add a button: onclick of the button, Router.push('http:google')  https://nextjs.org/docs/api-reference/next/router*/}
       </h4>
+      <h4>Space remaining: {post.numPeople - post.joinIds.length}</h4>
       {errors}
       {/*whenever the user clicks the button, make the request*/}
       <button onClick={doRequest} className="btn btn-primary">
@@ -41,7 +40,7 @@ PostShow.getInitialProps = async (context, axiosClient) => {
   const postId = context.query.postId;
   //fetch info about the post
   const { data } = await axiosClient.get(`/api/posts/${postId}`);
-  console.log(data);
+  //console.log(data);
   return { post: data }; //will be merged into props of the component
 };
 
