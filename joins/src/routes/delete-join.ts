@@ -43,7 +43,6 @@ router.delete(
         version: join.version,
       });
       res.status(204).send(join);
-      console.log(join);
     } catch (err) {
       return next(err);
     }

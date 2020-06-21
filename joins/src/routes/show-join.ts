@@ -14,6 +14,7 @@ router.get(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('wrong!');
       const user = await User.findById(req.currentUser!.id);
       if (!user) {
         throw new NotFoundError('This user does not exist!');

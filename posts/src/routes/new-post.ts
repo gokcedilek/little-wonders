@@ -29,7 +29,6 @@ const locationValidation = async (
   next: NextFunction
 ) => {
   const client = new Client({});
-  console.log('geocoding ', req.body.location);
   try {
     let result = await client.geocode({
       params: {
@@ -38,17 +37,15 @@ const locationValidation = async (
       },
       timeout: 10000,
     });
-    console.log(result.data);
+    //console.log(result.data);
     if (result.data.status === Status.OK) {
-      console.log(result.data.results[0].geometry.location); //do we want to show this location on the map? is this useful info? you know what, we can put a button on the client side that says "see in google maps", and if the user clicks that button, we would use this info to display on the map!
+      //console.log(result.data.results[0].geometry.location); //do we want to show this location on the map? is this useful info? you know what, we can put a button on the client side that says "see in google maps", and if the user clicks that button, we would use this info to display on the map!
       return next();
     } else {
-      console.log(result.data.status);
+      //console.log(result.data.status);
       throw new NotFoundError('Event location could not be validated!');
     }
   } catch (err) {
-    console.log('err!');
-    console.log(err);
     return next(err);
   }
 };
@@ -106,4 +103,4 @@ router.post(
   }
 );
 
-export { router as createPostRouter };
+export { router as newPostRouter };

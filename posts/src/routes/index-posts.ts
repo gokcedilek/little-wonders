@@ -10,4 +10,4 @@ router.get('/api/posts', async (req: Request, res: Response) => {
   res.send(posts).status(200);
 });
 
-export { router as indexPostRouter };
+export { router as indexPostsRouter };

@@ -23,4 +23,4 @@ router.get(
   }
 );
 
-export { router as showPostsRouter };
+export { router as userJoinsRouter };

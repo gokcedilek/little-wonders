@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import useRequest from '../../hooks/use-request';
+import useRequest from '../../../hooks/use-request';
 import Router from 'next/router';
 //import Calendar from 'react-calendar';
 //import DateTimePicker from 'react-datetime-picker';
 
-const NewPost = () => {
+const UpdatePost = ({ post }) => {
   const [title, setTitle] = useState('');
   const [description, setDescr] = useState('');
   const [location, setLocation] = useState('');
@@ -13,8 +13,8 @@ const NewPost = () => {
   const [numPeople, setNumPeople] = useState(2);
 
   const { doRequest, errors } = useRequest({
-    url: '/api/posts',
-    method: 'post',
+    url: `/api/posts/${post.id}`,
+    method: 'put',
     body: {
       title,
       description,
@@ -22,7 +22,7 @@ const NewPost = () => {
       location,
       time,
     },
-    onSuccess: (post) => Router.push('/'),
+    onSuccess: (post) => Router.push('/posts'),
   });
 
   const onSubmit = async (event) => {
@@ -33,7 +33,7 @@ const NewPost = () => {
 
   return (
     <div>
-      <h1>Create a Post</h1>
+      <h1>Update a Post</h1>
       <form onSubmit={onSubmit}>
         <div className="form-group">
           <label>Title</label>
@@ -85,4 +85,12 @@ const NewPost = () => {
   );
 };
 
-export default NewPost;
+UpdatePost.getInitialProps = async (context, axiosClient) => {
+  console.log('postId: ', context.query.postId);
+  const postId = context.query.postId;
+  //fetch info about the post, because we will need the id of the post to make an update request!
+  const { data } = await axiosClient.get(`/api/posts/${postId}`);
+  return { post: data };
+};
+
+export default UpdatePost;
