@@ -2,7 +2,7 @@ import useRequest from '../../hooks/use-request';
 import Router from 'next/router';
 import Link from 'next/link';
 
-const PostShow = ({ post }) => {
+const ShowPost = ({ post }) => {
   const { doRequest, errors } = useRequest({
     url: '/api/joins',
     method: 'post',
@@ -34,7 +34,7 @@ const PostShow = ({ post }) => {
 
 //fetch info about the post we will display on this page
 //note that we receive the content & client arguments from AppComponent.getInitialProps
-PostShow.getInitialProps = async (context, axiosClient) => {
+ShowPost.getInitialProps = async (context, axiosClient) => {
   //retrieve the postid from "context" -- it's in context.query -- because the postId info is stored in the URL
   console.log('postId: ', context.query.postId);
   const postId = context.query.postId;
@@ -44,4 +44,4 @@ PostShow.getInitialProps = async (context, axiosClient) => {
   return { post: data }; //will be merged into props of the component
 };
 
-export default PostShow;
+export default ShowPost;

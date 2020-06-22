@@ -9,9 +9,6 @@ export default () => {
     method: 'post',
     body: {},
     onSuccess: () => {
-      <a class="btn btn-info" onclick="toastr.info('Hi! I am info message.');">
-        Info message
-      </a>;
       Router.push('/'); //navigate user to a new route
     },
   });
