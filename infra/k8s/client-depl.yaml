@@ -15,6 +15,12 @@ spec:
       containers:
         - name: client #important for logging purposes
           image: gcr.io/cool-snowfall-275901/client #gokcedilek/s-e-auth
+          env:
+            - name: GMAPS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gmaps-secret
+                  key: GMAPS_KEY
 
 ---
 #config for our service

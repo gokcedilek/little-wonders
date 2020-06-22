@@ -20,6 +20,9 @@ const start = async () => {
   if (!process.env.NATS_URL) {
     throw new Error('MONGO_URI must be defined!');
   }
+  if (!process.env.GMAPS_KEY) {
+    throw new Error('GMAPS_KEY must be defined!');
+  }
 
   try {
     //3rd arg, url: connect to the clusterIP service that is governing access to our nats deployment (pods)

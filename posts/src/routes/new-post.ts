@@ -33,13 +33,11 @@ const locationValidation = async (
     let result = await client.geocode({
       params: {
         address: req.body.location,
-        key: 'AIzaSyAfPjiiFC9t-ixMAHY9tqf2YJw19TZ0w0k', //HAVE TO STORE THIS IN A K8S SECRET!!!!!!!!!!!!!!!!!
+        key: process.env.GMAPS_KEY!, //HAVE TO STORE THIS IN A K8S SECRET!!!!!!!!!!!!!!!!!
       },
       timeout: 10000,
     });
-    //console.log(result.data);
     if (result.data.status === Status.OK) {
-      //console.log(result.data.results[0].geometry.location); //do we want to show this location on the map? is this useful info? you know what, we can put a button on the client side that says "see in google maps", and if the user clicks that button, we would use this info to display on the map!
       return next();
     } else {
       //console.log(result.data.status);

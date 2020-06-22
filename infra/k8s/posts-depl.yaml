@@ -22,7 +22,7 @@ spec:
               valueFrom: #value comes from the secret we created!!!
                 secretKeyRef:
                   name: jwt-secret
-                  key: JWT_KEY #there can be many key-value pairs in a secret
+                  key: JWT_KEY #there can be many key-value pairs in a secret!
             - name: NATS_URL
               value: 'http://nats-srv:4222'
             - name: NATS_CLUSTER_ID
@@ -31,6 +31,11 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name #pod name provided as env var
+            - name: GMAPS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gmaps-secret
+                  key: GMAPS_KEY
 
 ---
 #config for our service

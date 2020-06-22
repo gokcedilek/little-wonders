@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { Map, GoogleApiWrapper, InfoWindow, Marker } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+// import getConfig from 'next/config';
+
+// const { publicRuntimeConfig } = getConfig();
+
+console.log(process.env.gmaps_secret);
 
 const mapStyles = {
   width: '100%',
@@ -20,8 +25,14 @@ export class LocationMap extends Component {
     );
   }
 }
-
-//store key in k8s secret!
 export default GoogleApiWrapper({
   apiKey: 'AIzaSyAfPjiiFC9t-ixMAHY9tqf2YJw19TZ0w0k',
 })(LocationMap);
+
+// export default GoogleApiWrapper({
+//   apiKey: publicRuntimeConfig.gmaps_secret,
+// })(LocationMap);
+
+// export default GoogleApiWrapper({
+//   apiKey: process.env.gmaps_secret,
+// })(LocationMap);

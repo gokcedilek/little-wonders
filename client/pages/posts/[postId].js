@@ -22,6 +22,7 @@ const ShowPost = ({ post }) => {
           <a>See on Google Maps!</a>
         </Link>
       </h4>
+      <h6>KEY: {process.env.GMAPS_KEY}</h6>
       <h4>Space remaining: {post.numPeople - post.joinIds.length}</h4>
       {errors}
       {/*whenever the user clicks the button, make the request*/}

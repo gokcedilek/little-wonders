@@ -3,6 +3,8 @@
 const JoinUsers = ({ users }) => {
   console.log(users);
 
+  //add a list to display joins/users info!
+
   return <div>Hello!</div>;
 };
 
