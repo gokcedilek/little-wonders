@@ -8,7 +8,7 @@ const JoinIndex = ({ joins }) => {
   const makeRequest = async (join) => {
     try {
       const response = await axios.delete(`/api/joins/${join.post.id}`);
-      Router.push('/');
+      Router.push('/joins');
     } catch (err) {
       console.log(err);
       const errors = err.response.data.errors;
