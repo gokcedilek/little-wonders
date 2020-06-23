@@ -2,31 +2,29 @@ import mongoose from 'mongoose';
 import { Password } from '../services/password';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
-//interface that describes the properties (attributes) required to create a new user(record) - we shouldn't pass incorrect attributes!
+//properties required to create a new user record - TS confirms we use the correct attributes when building a user
 interface UserAttrs {
   email: string;
   password: string;
 }
 
-//interface that describes the properties that a User Document has - what properties a single user has!!! (a single user is what is returned from the build function we wrote - result of calling new User()!) - return value of the build function!
-//properties that a saved user(record) has
+//properties a User Document has - a User Document is the result of calling new User()
 interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
   version: number;
 }
 
-//interface that describes the properties a User Model has (to tell ts that there will be a "build" function available on this User model) - what the entire collection of users looks like! this is the key -- the model is for the collection, not each individual user!
-//all the different properties that will be assigned to the model itself *****(model: entire collection of data, document: one single record)*****
+//properties assigned to the User Model - the Model describes the entire collection, not an individual record
 interface UserModel extends mongoose.Model<UserDoc> {
-  build(attrs: UserAttrs): UserDoc; //makes sure we pass the correct arg.s when creating a user
+  build(attrs: UserAttrs): UserDoc;
 }
 
-//schema: properties that a user has
+//tell Mongoose about what a User looks like
 const userSchema = new mongoose.Schema(
   {
     email: {
-      type: String, //specific to mongoose, not ts!
+      type: String,
       required: true,
     },
     password: {
@@ -36,20 +34,18 @@ const userSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      //turn the user document into json
+      //turn the User doc into JSON
       transform(doc, ret) {
-        //doc: actual user doc, ret: make direct changes to this object, will be turned into json
+        //doc: doc being converted, ret: modified doc that will be turned into JSON
         ret.id = ret._id; //standardize _id to id
         delete ret._id;
-        delete ret.password; //js keyword - remove a property from an object
-        //delete ret.__v; //same thing as versionKey: false
+        delete ret.password;
       },
-      //versionKey: false,
     },
   }
 );
 
-//automatically hash a password before saving a user to the db: middleware executed anytime before we save a user document to our db
+//middleware executed anytime before we save a User document to our db
 userSchema.pre('save', async function (done) {
   //inside of "pre", we get access to the document (user instance) we are trying to save in the callback function as "this"!
 
@@ -58,17 +54,17 @@ userSchema.pre('save', async function (done) {
     const hashed = await Password.toHash(this.get('password'));
     this.set('password', hashed);
   }
-  done(); //after all the async work
+  done(); //after the async work
 });
 
 //track the version of these records using a field "version", rather than the default "__v"
 userSchema.set('versionKey', 'version');
-//enable OCC plugin!!!!!!!
+//enable OCC plugin
 userSchema.plugin(updateIfCurrentPlugin);
 
-//the purpose of this function is to allow ts to do typechecking on the attributes that we input to create a user
+//allow TS to do typechecking on the attributes that we input to create a user
 userSchema.statics.build = (attrs: UserAttrs): UserDoc => {
-  return new User(attrs); //a single user!!! - the inputs to the "build" func are verified by typescript!
+  return new User(attrs);
 };
 
 //< >: generic type args to the model function

@@ -15,6 +15,6 @@ export const signupUser = async (
     }
     next();
   } catch (err) {
-    next(err); //async error handling!
+    next(err);
   }
 };

@@ -1,12 +1,11 @@
 import nats, { Stan } from 'node-nats-streaming';
 
-//don't export the whole class
+//note that we will NOT export the whole class
 class NatsWrapper {
-  //define this _client property AFTER we connect to nats and get back a client. we will then assign that client as the value of _client! //? : this property might be undefined
+  //define this _client property AFTER we connect to nats and get back a client. ? shows that this property might be undefined
   private client?: Stan;
 
-  //access the private client using a getter, and if we try to use the client before we connect, throw an error
-  //we use a getter like so: this.client
+  //access the private client field using a getter, and if we try to use the client before we connect, throw an error
   get theClient() {
     if (!this.client) {
       throw new Error(

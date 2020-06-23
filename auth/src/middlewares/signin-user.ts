@@ -10,14 +10,11 @@ export const signinUser = async (
   const { email } = req.body;
   try {
     const existingUser = await User.findOne({ email });
-    console.log('checking existing user');
     if (!existingUser) {
-      console.log('user does not exist');
       throw new BadRequestError('invalid credentials!');
     }
-    console.log('user exists!');
     next();
   } catch (err) {
-    next(err); //async error handling!
+    next(err);
   }
 };
