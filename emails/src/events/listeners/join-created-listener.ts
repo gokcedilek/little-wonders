@@ -13,14 +13,17 @@ export class JoinCreatedListener extends Listener<JoinCreatedEvent> {
     const mailer = new JoinCreatedMailer(
       {
         subject: 'miracle!',
-        receiver: 'gokcebackup@gmail.com', //need to replace with the user email
+        receiver: 'gokcebackup@gmail.com',
+        //receiver: data.user.email,
       },
       joinCreatedTemplate(data)
     );
 
-    const miracle = await mailer.send();
-    console.log('received a response!');
-    console.log(miracle);
+    // const miracle = await mailer.send();
+    // console.log('received a response!');
+    // console.log(miracle);
+
+    await mailer.send();
 
     //ack the message
     msg.ack();

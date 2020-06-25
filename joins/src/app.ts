@@ -11,6 +11,7 @@ import { userJoinsRouter } from './routes/user-joins';
 import { joinUsersRouter } from './routes/join-users';
 import { deleteJoinRouter } from './routes/delete-join';
 import { showJoinRouter } from './routes/show-join';
+import { confirmJoinRouter } from './routes/confirm-join';
 
 const app = express();
 app.set('trust proxy', true); //trust traffic coming from ingress-nginx
@@ -30,6 +31,7 @@ app.use(userJoinsRouter);
 app.use(joinUsersRouter);
 app.use(deleteJoinRouter);
 app.use(showJoinRouter);
+app.use(confirmJoinRouter);
 
 //a request on any method, on a route we don't recognise - throw 404
 app.all('*', async (req, res) => {

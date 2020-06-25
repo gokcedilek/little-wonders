@@ -71,13 +71,15 @@ router.post(
       //publish an event for the successful join
       new JoinCreatedPublisher(natsWrapper.theClient).publish({
         id: join.id,
-        //status: join.status, //no need, because weknow what the status is...
-        userId: user.id,
-        //expiresAt: join.expAt.toISOString(),
+        version: join.version,
+        status: join.status,
+        user: {
+          id: user.id,
+          email: user.email,
+        },
         post: {
           id: post.id,
         },
-        version: join.version,
       });
       res.status(201).send(join);
     } catch (err) {
