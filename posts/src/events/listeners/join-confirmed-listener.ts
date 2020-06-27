@@ -3,6 +3,7 @@ import { queueGroupName } from './queue-group-name';
 import { Message } from 'node-nats-streaming';
 import { Post } from '../../models/post';
 import { PostUpdatedPublisher } from '../publishers/post-updated-publisher';
+import mongoose from 'mongoose';
 
 export class JoinConfirmedListener extends Listener<JoinConfirmedEvent> {
   subject: Subjects.JoinConfirmed = Subjects.JoinConfirmed;
@@ -11,11 +12,7 @@ export class JoinConfirmedListener extends Listener<JoinConfirmedEvent> {
   async onMessage(data: JoinConfirmedEvent['data'], msg: Message) {
     //find the post for the join
 
-    console.log('attempted');
-    console.log(data);
     const post = await Post.findById(data.post.id);
-
-    console.log('found post');
 
     //if no post, throw error
     if (!post) {
@@ -37,8 +34,6 @@ export class JoinConfirmedListener extends Listener<JoinConfirmedEvent> {
       }
     );
 
-    console.log('updated post');
-
     //refetch the updated post, so that we will publish the event below with the correct values
     const updatedPost = await Post.findById(data.post.id);
     if (!updatedPost) {
@@ -56,8 +51,6 @@ export class JoinConfirmedListener extends Listener<JoinConfirmedEvent> {
       location: updatedPost.location,
       time: updatedPost.time,
     });
-
-    console.log('I RECEIVED JOIN CONFIRMED EVENT! TAKE A BREAK!');
 
     //ack the message
     msg.ack();

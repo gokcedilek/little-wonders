@@ -1,7 +1,7 @@
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 import { JoinCreatedListener } from './events/listeners/join-created-listener';
-// import { JoinCancelledListener } from './events/listeners/join-cancelled-listener';
+import { JoinCancelledListener } from './events/listeners/join-cancelled-listener';
 
 const start = async () => {
   if (!process.env.NATS_CLIENT_ID) {
@@ -33,7 +33,7 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.theClient.close());
 
     new JoinCreatedListener(natsWrapper.theClient).listen();
-    // new JoinCancelledListener(natsWrapper.theClient).listen();
+    new JoinCancelledListener(natsWrapper.theClient).listen();
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

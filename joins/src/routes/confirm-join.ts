@@ -12,8 +12,7 @@ router.post(
   requireAuth,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('route is working!?');
-      const join = await Join.findById(req.params.joinId);
+      const join = await Join.findById(req.params.joinId).populate('post');
       if (!join) {
         throw new NotFoundError('This join does not exist!');
       }
@@ -21,8 +20,6 @@ router.post(
       join.set({ status: JoinStatus.Confirmed });
 
       await join.save();
-
-      //console.log(join);
 
       //publish join-confirmed
       new JoinConfirmedPublisher(natsWrapper.theClient).publish({
@@ -37,8 +34,6 @@ router.post(
           id: join.post.id,
         },
       });
-
-      console.log(join);
 
       res.status(201).send(join);
     } catch (err) {

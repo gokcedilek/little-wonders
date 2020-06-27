@@ -1,3 +1,4 @@
+//NOTE: CAN BE DELETED
 import { Listener, JoinCreatedEvent, Subjects } from '@gdsocialevents/common';
 import { queueGroupName } from './queue-group-name';
 import { Message } from 'node-nats-streaming';

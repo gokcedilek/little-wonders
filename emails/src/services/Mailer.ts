@@ -5,13 +5,13 @@ export class SendGridMail extends helper.Mail {}
 export class SendGridEmail extends helper.Email {}
 export class SendGridContent extends helper.Content {}
 
-export class JoinCreatedMailer extends SendGridMail {
+export class Mailer extends SendGridMail {
   private sendGrid: any;
   private mail: SendGridMail;
 
   constructor(metadata: { subject: string; receiver: string }, body: string) {
     super();
-    const from = new SendGridEmail('gokcedilek99@gmail.com');
+    const from = new SendGridEmail('gokcedilek99@gmail.com'); //need to change
     const subject = metadata.subject;
     const recipient = new SendGridEmail(metadata.receiver);
     const content = new helper.Content('text/html', body);

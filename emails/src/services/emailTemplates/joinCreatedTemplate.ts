@@ -1,7 +1,6 @@
 import { JoinCreatedEvent } from '@gdsocialevents/common';
 
 export default (data: JoinCreatedEvent['data']) => {
-  //return `<div>Welcome to !${JoinCreatedEventData.id}</div>`;
   return `
     <html>
       <body>

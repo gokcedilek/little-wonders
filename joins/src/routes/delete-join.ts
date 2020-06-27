@@ -35,13 +35,18 @@ router.delete(
       await join.save();
 
       //publish an event saying a join was cancelled!
-      // new JoinCancelledPublisher(natsWrapper.theClient).publish({
-      //   id: join.id,
-      //   post: {
-      //     id: post.id,
-      //   },
-      //   version: join.version,
-      // });
+      new JoinCancelledPublisher(natsWrapper.theClient).publish({
+        id: join.id,
+        version: join.version,
+        status: join.status,
+        user: {
+          id: user.id,
+          email: user.email,
+        },
+        post: {
+          id: post.id,
+        },
+      });
       res.status(204).send(join);
     } catch (err) {
       return next(err);

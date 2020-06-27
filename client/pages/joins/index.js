@@ -55,7 +55,7 @@ const JoinIndex = ({ joins }) => {
 //fetch initial list of joins
 JoinIndex.getInitialProps = async (context, axiosClient) => {
   const { data } = await axiosClient.get('/api/joins');
-  const joins = data.filter((join) => join.status !== 'cancelled'); //only show the joins that have not been cancelled
+  const joins = data.filter((join) => join.status === 'confirmed'); //only show the joins that have not been cancelled
   return { joins: joins };
 };
 

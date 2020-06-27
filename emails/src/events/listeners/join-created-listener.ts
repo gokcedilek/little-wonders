@@ -1,7 +1,7 @@
 import { Listener, JoinCreatedEvent, Subjects } from '@gdsocialevents/common';
 import { queueGroupName } from './queue-group-name';
 import { Message } from 'node-nats-streaming';
-import { JoinCreatedMailer } from '../../services/JoinCreatedMailer';
+import { Mailer } from '../../services/Mailer';
 import joinCreatedTemplate from '../../services/emailTemplates/joinCreatedTemplate';
 
 export class JoinCreatedListener extends Listener<JoinCreatedEvent> {
@@ -10,7 +10,7 @@ export class JoinCreatedListener extends Listener<JoinCreatedEvent> {
 
   async onMessage(data: JoinCreatedEvent['data'], msg: Message) {
     //send a join-created confirmation email
-    const mailer = new JoinCreatedMailer(
+    const mailer = new Mailer(
       {
         subject: 'miracle!',
         receiver: 'gokcebackup@gmail.com',
@@ -20,10 +20,9 @@ export class JoinCreatedListener extends Listener<JoinCreatedEvent> {
     );
 
     // const miracle = await mailer.send();
-    // console.log('received a response!');
     // console.log(miracle);
 
-    await mailer.send();
+    await mailer.send(); //try-catch!!!!
 
     //ack the message
     msg.ack();
