@@ -56,9 +56,11 @@ router.post(
         throw new BadRequestError('This event is already full!');
       }
 
-      //calculate exp date for this signup attempt
-      // const expiration = new Date();
-      // expiration.setSeconds(expiration.getSeconds() + EXP_WINDOW_SECONDS);
+      //check if this user has already joined this event
+      const existingJoin = await Join.findOne({ user: user, post: post });
+      if (existingJoin) {
+        throw new BadRequestError('You are already registered for this event!');
+      }
 
       const join = Join.build({
         user: user,

@@ -15,7 +15,7 @@ export class Mailer extends SendGridMail {
     const subject = metadata.subject;
     const recipient = new SendGridEmail(metadata.receiver);
     const content = new helper.Content('text/html', body);
-    //super(from, subject, recipient, content);
+
     this.mail = new SendGridMail(from, subject, recipient, content);
 
     this.sendGrid = require('sendgrid')(process.env.SENDGRID_KEY);

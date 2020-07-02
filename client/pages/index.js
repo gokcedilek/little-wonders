@@ -4,12 +4,6 @@ import Link from 'next/link';
 
 //the props (arguments) of this component come from the return values of the .getInitialProps function!
 const LandingPage = ({ currentUser, posts }) => {
-  // return currentUser ? (
-  //   <h1>You are signed in</h1>
-  // ) : (
-  //   <h1>You are not signed in</h1>
-  // );
-
   //loop over posts, build a row for each post
   const postList = posts.map((post) => {
     return (
@@ -20,9 +14,14 @@ const LandingPage = ({ currentUser, posts }) => {
           {/* link to a query/wildcard route */}
           {/* "as" specifies the real/actual URL, needed along with "href" */}
           <Link href="/posts/[postId]" as={`/posts/${post.id}`}>
-            <a>Post Id: {post.id}</a>
+            <a>See the Post!</a>
           </Link>
         </td>
+        {post.numPeople - post.joinIds.length <= 0 && (
+          <div className="ui left pointing orange label">
+            This post is full!
+          </div>
+        )}
       </tr>
     );
   });
@@ -35,7 +34,7 @@ const LandingPage = ({ currentUser, posts }) => {
           <tr>
             <th>Title</th>
             <th>Description</th>
-            <th>See the Post!</th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>{postList}</tbody>

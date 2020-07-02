@@ -1,54 +1,19 @@
-import { useState } from 'react'; //useState hook is needed to keep track of the input the user types in to the form
 import Router from 'next/router';
-import useRequest from '../../hooks/use-request';
+import { AuthForm } from '../../components/authForm';
 
 export default () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { doRequest, errors } = useRequest({
-    url: '/api/users/signin',
-    method: 'post',
-    body: {
-      email,
-      password,
-    },
-    onSuccess: () => {
-      <a class="btn btn-info" onclick="toastr.info('Hi! I am info message.');">
-        Info message
-      </a>;
-      Router.push('/');
-    },
-  });
-
-  const onSubmit = async (event) => {
-    event.preventDefault(); //prevent form from submitting itself to the browser
-
-    await doRequest();
+  const onSuccess = () => {
+    Router.push('/');
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <h1>Sign In</h1>
-      <div className="form-group">
-        <label>Email</label>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="form-control"
-        />
-      </div>
-      <div className="form-group">
-        <label>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="form-control"
-        />
-      </div>
-      {errors}{' '}
-      {/* this variable will only be set if there's an error when making the request */}
-      <button className="btn btn-primary">Sign In</button>
-    </form>
+    <AuthForm
+      data={{
+        header: 'Sign In',
+        url: '/api/users/signin',
+        method: 'post',
+        onSuccess: onSuccess,
+      }}
+    />
   );
 };

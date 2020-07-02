@@ -21,6 +21,8 @@ export default ({ url, method, body, onSuccess }) => {
       return response.data;
     } catch (err) {
       //set the "errors" to be a descriptive JSX block so that components that use this hook can display the value of the "errors" variable returned from this function easily!
+      console.log('error!');
+      console.log(err.response);
       const errors = err.response.data.errors;
       setErrors(
         <div className="alert alert-danger">

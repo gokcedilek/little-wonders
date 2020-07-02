@@ -62,6 +62,7 @@ router.put(
         location: post.location,
         time: post.time,
       });
+      console.log('YAAAAYYYYYY');
       res.send(post);
     } catch (err) {
       return next(err);

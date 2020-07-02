@@ -17,6 +17,7 @@
     "react": "^16.13.1",
     "react-calendar": "^3.1.0",
     "react-datetime-picker": "^3.0.2",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "semantic-ui-css": "^2.4.1"
   }
 }

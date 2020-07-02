@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@gdsocialevents/common": "^1.0.40",
+    "@gdsocialevents/common": "^1.0.42",
     "@googlemaps/google-maps-services-js": "^2.6.0",
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-session": "^2.0.39",

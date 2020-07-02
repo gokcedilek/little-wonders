@@ -1,5 +1,10 @@
 import { Message } from 'node-nats-streaming';
-import { Subjects, Listener, PostCreatedEvent } from '@gdsocialevents/common';
+import {
+  Subjects,
+  Listener,
+  PostCreatedEvent,
+  eventListenerError,
+} from '@gdsocialevents/common';
 import { Post } from '../../models/post';
 import { queueGroupName } from './queue-group-name';
 
@@ -21,14 +26,12 @@ export class PostCreatedListener extends Listener<PostCreatedEvent> {
       time,
     });
 
+    //if something goes wrong, don't ack the message
     try {
       await post.save();
       msg.ack();
     } catch (err) {
-      //we wont ack the message
-      //do we need to throw an error here? "throw err;"??
-      console.log('error!');
-      console.log(err);
+      eventListenerError(this.queueGroupName, this.subject, err);
     }
   }
 }

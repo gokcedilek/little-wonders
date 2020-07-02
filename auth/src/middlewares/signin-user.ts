@@ -11,7 +11,7 @@ export const signinUser = async (
   try {
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
-      throw new BadRequestError('invalid credentials!');
+      throw new BadRequestError('Account does not exist!');
     }
     next();
   } catch (err) {

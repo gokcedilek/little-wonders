@@ -11,7 +11,7 @@ export const signupUser = async (
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      throw new BadRequestError('user already exists!');
+      throw new BadRequestError('Account already exists!');
     }
     next();
   } catch (err) {

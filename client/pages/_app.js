@@ -1,5 +1,6 @@
 //import bootstrap css (global)
 import 'bootstrap/dist/css/bootstrap.css';
+import 'semantic-ui-css/semantic.min.css';
 import buildClient from '../api/build-client';
 import Header from '../components/header';
 
@@ -8,7 +9,7 @@ import Header from '../components/header';
 //wrapper for components we want to display --> global bootstrap + show elements we want to show on every page
 //custom app component: this will wrap-up pages, this is not a page itself!
 const AppComponent = ({ Component, pageProps, currentUser }) => {
-  //Component: pass the page-specific server-side rendering info to the Component (page we are trying to show) using pageProps! Component is the actual page we are trying to show
+  //Component: pass the page-specific server-side rendering info to the Component (page we are trying to show) using pageProps! Component is the actual page we are trying to show!
   //pageProps: the result of calling getInitialProps on the child component (not the app component) - props of the (inner) component we are trying to show
   //currentUser: we need to make sure that every child component receives currentUser as a prop!
   return (
@@ -33,6 +34,7 @@ AppComponent.getInitialProps = async (appContext) => {
 
   //2. fetch data for the component/page we are currently trying to render (appContext.Component is the page we are showing, so call its getInitialProps function, if it exists): info for a particular page of our app
   let pageProps = {};
+  //if the component makes use of getInitialProps, below is the data it will be provided with. otherwise, pageProps will be empty
   if (appContext.Component.getInitialProps) {
     //provide to the child component's (appContext.Component) getInitialProps: the already-built client, and info about the currentUser (which is in response.data) -- these 3 arguments (context, client, data about currentUser) will be provided to all components' getInitialProps functions!!!
     pageProps = await appContext.Component.getInitialProps(

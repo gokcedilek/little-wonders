@@ -33,7 +33,7 @@ const locationValidation = async (
     let result = await client.geocode({
       params: {
         address: req.body.location,
-        key: process.env.GMAPS_KEY!, //HAVE TO STORE THIS IN A K8S SECRET!!!!!!!!!!!!!!!!!
+        key: process.env.GMAPS_KEY!,
       },
       timeout: 10000,
     });
@@ -71,7 +71,6 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { title, description, location, time, numPeople } = req.body;
-      console.log('received time: ', time);
       const post = Post.build({
         title,
         description,
@@ -81,8 +80,6 @@ router.post(
         time,
       });
       await post.save();
-
-      console.log('saved post: ', post);
 
       new PostCreatedPublisher(natsWrapper.theClient).publish({
         id: post.id,

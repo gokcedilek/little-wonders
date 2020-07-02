@@ -48,6 +48,7 @@ router.delete(
         },
       });
       res.status(204).send(join);
+      console.log('yeeeeeyyyyyyy');
     } catch (err) {
       return next(err);
     }

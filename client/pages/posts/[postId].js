@@ -1,6 +1,5 @@
 import useRequest from '../../hooks/use-request';
 import Router from 'next/router';
-import Link from 'next/link';
 
 const ShowPost = ({ post }) => {
   const { doRequest, errors } = useRequest({
@@ -12,23 +11,43 @@ const ShowPost = ({ post }) => {
     onSuccess: (join) => Router.push('/joins/[joinId]', `/joins/${join.id}`),
   });
 
+  const showDirections = () => {
+    // Router.push(`//www.google.com/maps/dir/?api=1`);
+    const destination = post.location.replace(/\s/g, '+'); //google maps urls
+    Router.push(`//www.google.com/maps/dir/?api=1&destination=${destination}`);
+  };
+
   return (
-    <div>
-      <h4>Title: {post.title}</h4>
-      <h4>Description: {post.description}</h4>
-      <h4>
-        Location: {post.location}
-        <Link href="/posts/map">
-          <a>See on Google Maps!</a>
-        </Link>
-      </h4>
-      <h6>KEY: {process.env.GMAPS_KEY}</h6>
-      <h4>Space remaining: {post.numPeople - post.joinIds.length}</h4>
-      {errors}
-      {/*whenever the user clicks the button, make the request*/}
-      <button onClick={doRequest} className="btn btn-primary">
-        Join the Event!
-      </button>
+    <div className="ui card">
+      <div className="content">
+        <div className="header">Event Details</div>
+      </div>
+      <div className="content">
+        <h4 className="ui sub header">{post.title}</h4>
+        <div className="ui small feed">
+          <div className="event">
+            <div className="content">
+              <div className="summary">{post.description}</div>
+              <div>Time: {post.time}</div>
+              <div>Location: {post.location}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="extra content">
+        <button class="ui button" onClick={showDirections}>
+          View on Google Maps
+        </button>
+      </div>
+      <div className="content">
+        <div>Space Remaining: {post.numPeople - post.joinIds.length}</div>
+      </div>
+      <div class="extra content">
+        <button class="ui button" onClick={doRequest}>
+          Join the Event
+        </button>
+        {errors}
+      </div>
     </div>
   );
 };
@@ -37,11 +56,9 @@ const ShowPost = ({ post }) => {
 //note that we receive the content & client arguments from AppComponent.getInitialProps
 ShowPost.getInitialProps = async (context, axiosClient) => {
   //retrieve the postid from "context" -- it's in context.query -- because the postId info is stored in the URL
-  console.log('postId: ', context.query.postId);
   const postId = context.query.postId;
   //fetch info about the post
   const { data } = await axiosClient.get(`/api/posts/${postId}`);
-  //console.log(data);
   return { post: data }; //will be merged into props of the component
 };
 

@@ -51,7 +51,6 @@ router.post(
       });
       res.status(201).send(user);
     } catch (err) {
-      console.log(err);
       return next(err);
     }
   }

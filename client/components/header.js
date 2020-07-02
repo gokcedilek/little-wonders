@@ -5,12 +5,12 @@ import Link from 'next/link';
 export default ({ currentUser }) => {
   //conditionally toggle which elements to show: create an array of them
   const links = [
-    !currentUser && { label: 'sign up', href: '/auth/signup' },
-    !currentUser && { label: 'sign in', href: '/auth/signin' },
-    currentUser && { label: 'create new', href: '/posts/new' },
-    currentUser && { label: 'joined by me', href: '/joins' },
-    currentUser && { label: 'created by me', href: '/posts' },
-    currentUser && { label: 'sign out', href: '/auth/signout' },
+    !currentUser && { label: 'Sign Up', href: '/auth/signup' },
+    !currentUser && { label: 'Sign In', href: '/auth/signin' },
+    currentUser && { label: 'Create New', href: '/posts/new' },
+    currentUser && { label: 'Joined By Me', href: '/joins' },
+    currentUser && { label: 'Created By Me', href: '/posts' },
+    currentUser && { label: 'Sign Out', href: '/auth/signout' },
   ]
     //only keep the indices that are not false (the correct links we should show based on which page we are on)
     .filter((link) => link)

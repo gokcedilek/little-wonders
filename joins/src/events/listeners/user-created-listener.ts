@@ -1,5 +1,10 @@
 import { Message } from 'node-nats-streaming';
-import { Subjects, Listener, UserCreatedEvent } from '@gdsocialevents/common';
+import {
+  Subjects,
+  Listener,
+  UserCreatedEvent,
+  eventListenerError,
+} from '@gdsocialevents/common';
 import { User } from '../../models/user';
 import { queueGroupName } from './queue-group-name';
 
@@ -19,8 +24,7 @@ export class UserCreatedListener extends Listener<UserCreatedEvent> {
       await user.save();
       msg.ack();
     } catch (err) {
-      console.log('error!');
-      console.log(err);
+      eventListenerError(this.queueGroupName, this.subject, err);
     }
   }
 }

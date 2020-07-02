@@ -1,5 +1,11 @@
 import { Message } from 'node-nats-streaming';
-import { Subjects, Listener, PostUpdatedEvent } from '@gdsocialevents/common';
+import {
+  Subjects,
+  Listener,
+  PostUpdatedEvent,
+  NotFoundError,
+  eventListenerError,
+} from '@gdsocialevents/common';
 import { Post } from '../../models/post';
 import { queueGroupName } from './queue-group-name';
 
@@ -19,7 +25,7 @@ export class PostUpdatedListener extends Listener<PostUpdatedEvent> {
 
       if (!post) {
         //if we don't find the post because the version # is wrong, this means that we are processing post-update events out of order, so throw an error and don't process the update!
-        throw new Error('post not found');
+        throw new NotFoundError('Post not found!');
         //if we throw an error and do not "ack" this event, nats will eventually re-assign this event to be processed (and it will be processed when it's in the right order)
       }
 
@@ -27,8 +33,7 @@ export class PostUpdatedListener extends Listener<PostUpdatedEvent> {
       await post.save(); //increment the version by 1, so that we will end up with the correct version: before it was data.version - 1, with the save it will become data.version
       msg.ack();
     } catch (err) {
-      //what to do? other than not acking the message?
-      //throw err
+      eventListenerError(this.queueGroupName, this.subject, err);
     }
   }
 }
