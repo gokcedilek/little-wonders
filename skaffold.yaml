@@ -1,0 +1,52 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  # local:
+  #   push: false #cannot have local and gcloudbuild at the same time!
+  googleCloudBuild: #update #1 to use gcloud build!
+    projectId: cool-snowfall-275901
+  artifacts: #setup code syncing to pods running our images
+    - image: gcr.io/cool-snowfall-275901/auth #gokcedilek/s-e-auth #update #2
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: gcr.io/cool-snowfall-275901/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
+    - image: gcr.io/cool-snowfall-275901/posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: gcr.io/cool-snowfall-275901/joins
+      context: joins
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: gcr.io/cool-snowfall-275901/emails
+      context: emails
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

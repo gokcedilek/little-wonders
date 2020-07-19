@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+spec:
+  replicas: 1 #number of pods (copies of the image) to run for the auth service
+  selector: #tell the deployment how to find the pods it will create
+    matchLabels:
+      app: client
+  template: #how to create each individual pod that this deployment will create
+    metadata:
+      labels: #this label matches up with the "matchLabels" in the "selector"
+        app: client
+    spec: #tell pod how to behave
+      containers:
+        - name: client #important for logging purposes
+          image: gcr.io/cool-snowfall-275901/client #gokcedilek/s-e-auth
+          env:
+            - name: GMAPS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gmaps-secret
+                  key: GMAPS_KEY
+
+---
+#config for our service
+#clusterIP service: allow communication to the service from anything else running inside of our cluster!
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec: #tell the service how to behave
+  selector: #tell the service how to find the pods that it should govern access to - all the pods with label "app: auth"
+    app: client
+  ports: #ports to expose on that pod
+    - name: client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

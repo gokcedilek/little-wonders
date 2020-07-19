@@ -1,0 +1,8 @@
+.DS_store
+.vscode
+auth/node_modules
+client/node_modules
+posts/node_modules
+joins/node_modules
+emails/node_modules
+client/.next/

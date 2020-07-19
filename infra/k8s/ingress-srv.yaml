@@ -1,0 +1,29 @@
+#routing rules tied to nginx
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: social-events.dev #made up domain name that'll work on our local machine
+      http:
+        paths: #routing rules inside the cluster for incoming requests from the outside world
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-srv
+              servicePort: 4000
+          - path: /api/posts/?(.*)
+            backend:
+              serviceName: posts-srv
+              servicePort: 4000
+          - path: /api/joins/?(.*)
+            backend:
+              serviceName: joins-srv
+              servicePort: 4000
+          - path: /?(.*) #catch all route - any req path - must be listed the last!
+            backend:
+              serviceName: client-srv
+              servicePort: 3000
